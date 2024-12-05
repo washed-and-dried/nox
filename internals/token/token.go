@@ -38,7 +38,7 @@ func (tokType TokenType) String() string {
 
     // types
     case INT: return "int"
-    case FUNC: return "func"
+    case FUNC: return "fn"
 
     // operators
     case BIN_PLUS: return "+"
@@ -51,7 +51,7 @@ func (tokType TokenType) String() string {
 
 func IsKeyword(lit string) (TokenType, bool) {
     switch lit {
-    case "func": return FUNC, true
+    case "fn": return FUNC, true
     default:
         return EOF, false
     }
