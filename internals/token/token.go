@@ -11,6 +11,7 @@ type TokenType int
 // token types
 const (
 	EOF = iota
+	SEMICOLON
 
 	IDENT
 
@@ -24,7 +25,9 @@ const (
 	FUNC
 
 	// operator
+    BIN_OP_START
 	BIN_PLUS
+    BIN_OP_END
 )
 
 func (tokType TokenType) String() string {
@@ -43,10 +46,15 @@ func (tokType TokenType) String() string {
     // operators
     case BIN_PLUS: return "+"
 
+    case SEMICOLON: return ";"
     case EOF: return "eof"
     default:
         panic("unhandled token type")
     }
+}
+
+func IsBinaryOperator(tokType TokenType) bool {
+    return tokType > BIN_OP_START && tokType < BIN_OP_END
 }
 
 func IsKeyword(lit string) (TokenType, bool) {

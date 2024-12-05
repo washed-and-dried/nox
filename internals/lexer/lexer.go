@@ -29,7 +29,6 @@ func NewLexer(filepath string) *Lexer {
 
 	// sets ch, pos, pos_next
 	l.read_char()
-	l.read_char()
 
 	return l
 }
@@ -41,7 +40,6 @@ func NewLexerFromString(inputStr string) *Lexer {
 	}
 
 	// sets ch, pos, pos_next
-	l.read_char()
 	l.read_char()
 
 	return l
@@ -76,22 +74,22 @@ func (l *Lexer) read_next_from_file() (rune, bool) {
 }
 
 func (l *Lexer) peek_next_char() (rune, bool) {
-    // Peek a sufficient number of bytes to decode at least one rune
+	// Peek a sufficient number of bytes to decode at least one rune
 	const maxPeekBytes = utf8.UTFMax // Maximum size of a UTF-8 encoded rune is 4 bytes
 	buf, err := l.file.Peek(maxPeekBytes)
-    if err != nil {
-        if err == io.EOF {
-            // returns ('\0', true) if we have reached EOF
-            return NULL_CHAR, true
-        } else {
-            panic(err)
-        }
-    }
+	if err != nil {
+		if err == io.EOF {
+			// returns ('\0', true) if we have reached EOF
+			return NULL_CHAR, true
+		} else {
+			panic(err)
+		}
+	}
 
 	// Decode the first rune from the buffer
 	r, size := utf8.DecodeRune(buf)
 	if r == utf8.RuneError && size == 1 {
-        panic("Could not decode a single fking rune")
+		panic("Could not decode a single fking rune")
 	}
 
 	return r, false

@@ -9,7 +9,7 @@ import (
 func TestLexer(t *testing.T) {
 	input := `
     fn main() {
-        print(1 + 1)
+        print(1 + 1);
     }
     `
 	toks := []Token{
@@ -27,6 +27,7 @@ func TestLexer(t *testing.T) {
 		{Literal: "+", Type: BIN_PLUS},
 		{Literal: "1", Type: INT},
 		{Literal: ")", Type: CLOSE_PARAN},
+		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "}", Type: CLOSE_CURLY},
 
