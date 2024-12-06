@@ -29,6 +29,14 @@ func (l *Lexer) NextToken() token.Token {
 			// TODO: handle prefix ++ in here
 			tok = token.Token{Literal: string(l.ch), Type: token.BIN_PLUS, Pos: l.pos}
 		}
+	case '-':
+		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MINUS, Pos: l.pos}
+	case '*':
+		tok = token.Token{Literal: string(l.ch), Type: token.BIN_ASTERIC, Pos: l.pos}
+	case '/':
+		tok = token.Token{Literal: string(l.ch), Type: token.BIN_DIVIDE, Pos: l.pos}
+	case '%':
+		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MODULO, Pos: l.pos}
 	default:
 		{
 			if unicode.IsDigit(l.ch) { // TODO: handle floating point and hexadecimal numbers

@@ -11,6 +11,7 @@ func TestLexer(t *testing.T) {
     fn main() {
         print(1 + 1);
     }
+    -*/%;
     `
 	toks := []Token{
 		{Literal: "fn", Type: FUNC},
@@ -30,6 +31,12 @@ func TestLexer(t *testing.T) {
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "}", Type: CLOSE_CURLY},
+
+		{Literal: "-", Type: BIN_MINUS},
+		{Literal: "*", Type: BIN_ASTERIC},
+		{Literal: "/", Type: BIN_DIVIDE},
+		{Literal: "%", Type: BIN_MODULO},
+		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "", Type: EOF},
 	}

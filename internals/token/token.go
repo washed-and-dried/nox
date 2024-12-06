@@ -26,7 +26,13 @@ const (
 
 	// operator
     BIN_OP_START
+
 	BIN_PLUS
+	BIN_MINUS
+    BIN_ASTERIC
+    BIN_DIVIDE
+    BIN_MODULO
+
     BIN_OP_END
 )
 
@@ -45,6 +51,10 @@ func (tokType TokenType) String() string {
 
     // operators
     case BIN_PLUS: return "+"
+    case BIN_MINUS: return "-"
+    case BIN_ASTERIC: return "*"
+    case BIN_DIVIDE: return "/"
+    case BIN_MODULO: return "%"
 
     case SEMICOLON: return ";"
     case EOF: return "eof"

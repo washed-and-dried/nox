@@ -36,12 +36,15 @@ func parse_bin_expr(expr parser.ExpressionStmt) int64 {
 
 	switch bin_expr.Operator.Type {
 	case token.BIN_PLUS:
-		{
-			l := bin_expr.Left.Value.AsInt.Value
-			r := bin_expr.Right.Value.AsInt.Value
-
-			return l + r
-		}
+		return bin_expr.Left.Value.AsInt.Value + bin_expr.Right.Value.AsInt.Value
+	case token.BIN_MINUS:
+		return bin_expr.Left.Value.AsInt.Value - bin_expr.Right.Value.AsInt.Value
+	case token.BIN_ASTERIC:
+		return bin_expr.Left.Value.AsInt.Value * bin_expr.Right.Value.AsInt.Value
+	case token.BIN_DIVIDE:
+		return bin_expr.Left.Value.AsInt.Value / bin_expr.Right.Value.AsInt.Value
+	case token.BIN_MODULO:
+		return bin_expr.Left.Value.AsInt.Value % bin_expr.Right.Value.AsInt.Value
 	default:
 		panic("Unhandled operator")
 	}

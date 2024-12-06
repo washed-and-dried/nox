@@ -81,6 +81,19 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 				return ExpressionStmt{} // TODO: handle variables
 			}
 		}
+    case token.OPEN_PARAN: // (..Expr..)
+        {
+            p.next_token()
+            if p.expect_peek(token.CLOSE_PARAN) {
+                return ExpressionStmt{}
+            }
+
+            expr := p.parse_expr()
+
+            p.expect_token_type(token.CLOSE_PARAN)
+
+            return expr
+        }
 	default: // FIXME: add guard with all non-primary tokens rather than panic
 		panic("Not an primary expression: " + p.tok.Type.String())
 	}
@@ -109,8 +122,10 @@ const MAX_PRECEDENCE = 2
 
 func (p *Parser) get_op_precedence(tokType token.TokenType) int {
 	switch tokType {
-	case token.BIN_PLUS:
+	case token.BIN_PLUS, token.BIN_MINUS:
 		return 1
+	case token.BIN_ASTERIC, token.BIN_DIVIDE, token.BIN_MODULO:
+		return 2
 	default:
 		panic("UNHANDLED OPERATOR PRECEDENCE: " + tokType.String())
 	}
