@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"nox/internals/eval"
 	"nox/internals/parser"
 	"os"
 )
@@ -13,6 +13,6 @@ func main() {
 	}
 
 	p := parser.NewParserFromString(string(inputStr))
-    fn := p.Parse_func_def()
-    fmt.Printf("%v", fn)
+	fn := p.Parse_func_def()
+	eval.Eval_func_def(fn)
 }

@@ -38,12 +38,13 @@ func (p *Parser) parse_bin_op(precedence int) ExpressionStmt {
 
 		right := p.parse_bin_op(precedence + 1)
 
+		bin_left := left // go shinanigans
 		left = ExpressionStmt{
 			Type: EXPR_TYPE_BIN,
 			Value: ExprValue{
 				AsBinOp: BinaryExpr{
 					Right:    &right,
-					Left:     &left,
+					Left:     &bin_left,
 					Operator: operator,
 				},
 			},
