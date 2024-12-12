@@ -17,13 +17,14 @@ type AST struct {
 
 type AstType string
 
+type Program struct {
+	Stmts []Statement
+}
+
 const (
 	STMTS = "stmts"
 
-	EXPR           = "expr"
-	EXPR_FUNC_CALL = "expr_func_call"
-	EXPR_BIN       = "expr_bin"
-
+	EXPR     = "expr"
 	ASSIGN   = "assign"
 	FUNC_DEF = "func_def"
 )

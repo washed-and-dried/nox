@@ -14,7 +14,17 @@ type Parser struct {
 	tok     token.Token
 }
 
-// TODO: func NewParser(filePath string)
+func NewParser(filePath string) *Parser {
+	p := &Parser{
+		l: lexer.NewLexer(filePath),
+	}
+
+	p.next_token() // set peekToken, tok
+	p.next_token()
+
+	return p
+}
+
 func NewParserFromString(inputStr string) *Parser {
 	p := &Parser{
 		l: lexer.NewLexerFromString(inputStr),
@@ -26,6 +36,40 @@ func NewParserFromString(inputStr string) *Parser {
 	return p
 }
 
+func (p *Parser) Parse_program() *Program {
+	stmts := []Statement{}
+
+	for p.tok.Type != token.EOF {
+		stmts = append(stmts, p.parse_statement())
+		// if p.tok.Type == token.SEMICOLON { // FIXME: remove if not necessary
+		// 	p.next_token()
+		// }
+	}
+
+	return &Program{
+		Stmts: stmts,
+	}
+}
+
+func (p *Parser) parse_statement() Statement {
+	switch p.tok.Type {
+	case token.FUNC:
+		return p.Parse_func_def()
+	case token.IDENT:
+		{
+			if p.peekTok.Type == token.OPEN_PARAN {
+				expr_stmt := p.parse_expr()
+				p.expect_token_type(token.SEMICOLON) // expr stmts must end with a semicolon
+				return expr_stmt
+			} else {
+				return nil // TODO: handle variable assigments statements
+			}
+		}
+	default:
+		panic("Unhandled statement type: " + p.tok.Type.String())
+	}
+}
+
 func (p *Parser) Parse_func_def() FuncDefStmt {
 	p.expect_token_type(token.FUNC)
 
@@ -35,7 +79,7 @@ func (p *Parser) Parse_func_def() FuncDefStmt {
 	// TODO: parse params
 	p.expect_token_type(token.CLOSE_PARAN)
 
-    body := p.parse_body()
+	body := p.parse_body()
 
 	return FuncDefStmt{
 		Ident: ident,
@@ -48,12 +92,10 @@ func (p *Parser) parse_body() BodyStatement {
 
 	stmts := []Statement{}
 
-	// parse function call expression
-	funcCall := p.parse_expr()
-	stmts = append(stmts, funcCall)
+	for p.tok.Type != token.CLOSE_CURLY {
+		stmts = append(stmts, p.parse_statement())
+	}
 
-	// FIXME: for now only parsing function call statement
-	p.expect_token_type(token.SEMICOLON)
 	p.expect_token_type(token.CLOSE_CURLY)
 
 	return BodyStatement{
