@@ -24,6 +24,9 @@ func (l *Lexer) NextToken() token.Token {
 	case NULL_CHAR:
 		tok = token.Token{Literal: "", Type: token.EOF, Pos: l.pos}
 
+	case '"', '`', '\'':
+		tok = l.read_string()
+
 	case '+':
 		{
 			// TODO: handle prefix ++ in here
@@ -50,6 +53,28 @@ func (l *Lexer) NextToken() token.Token {
 	l.read_char()
 
 	return tok
+}
+
+func (l *Lexer) read_string() token.Token {
+	strType := l.ch
+	pos := l.pos
+	lit := ""
+	MAX_STRING_SIZE := 256 // FIXME: Move this outside?
+
+	for len(lit) <= MAX_STRING_SIZE {
+		l.read_char()
+		if l.ch == '\n' {
+			panic("newline char in regular str | your retarded ass doesn't understand common fucking strings")
+		} else if l.ch == strType {
+			break
+		} else if len(lit) >= MAX_STRING_SIZE {
+			panic("len(str) > 256 or string wasn't closed | bro really thought this was javascript")
+		} else {
+			lit += string(l.ch)
+		}
+	}
+
+	return token.Token{Literal: lit, Type: token.STR, Pos: pos}
 }
 
 func (l *Lexer) read_number() token.Token {
