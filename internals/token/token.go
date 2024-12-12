@@ -22,6 +22,7 @@ const (
 
 	// types
 	INT
+    STR
 	FUNC
 
 	// operator
