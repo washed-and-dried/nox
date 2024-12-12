@@ -86,3 +86,11 @@ type IntExpr struct {
 func (i IntExpr) String() string {
 	return fmt.Sprintf("IntAST with value [%d]", i.Value)
 }
+
+type StrExpr struct {
+	Value string
+}
+
+func (s StrExpr) String() string {
+	return fmt.Sprintf("StrAST with value [%s]", s.Value)
+}

@@ -13,9 +13,11 @@ const (
 	EXPR_TYPE_FUNC = "func_call"
 	EXPR_TYPE_BIN  = "bin_op"
 	EXPR_TYPE_INT  = "int"
+    EXPR_TYPE_STR = "str"
 )
 
 type ExprValue struct {
+	AsStr      StrExpr
 	AsFuncCall FuncCallExpr
 	AsBinOp    BinaryExpr
 	AsInt      IntExpr
@@ -68,6 +70,20 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 				Type: EXPR_TYPE_INT,
 				Value: ExprValue{
 					AsInt: IntExpr{
+						Value: value,
+					},
+				},
+			}
+		}
+	case token.STR:
+		{
+			value := p.tok.Literal
+			p.next_token()
+
+			return ExpressionStmt{
+				Type: EXPR_TYPE_STR,
+				Value: ExprValue{
+					AsStr: StrExpr{
 						Value: value,
 					},
 				},
