@@ -6,42 +6,43 @@ import (
 	"nox/internals/token"
 )
 
+var (
+	EVAL_NULL_OBJ  = NullObj{}
+	EVAL_ERROR_OBJ = ErrorObj{}
+)
+
 // FIXME: add struct Eval with context
 func Eval_program(program *parser.Program) {
 	for _, stmt := range program.Stmts {
-		eval_stmt(stmt)
+		eval_ast(stmt)
 	}
 }
 
-func eval_stmt(stmt parser.Statement) {
+func eval_ast(stmt parser.Statement) EvalObj {
 	switch st := stmt.(type) {
 	case parser.FuncDefStmt:
 		{
-			Eval_func_def(st)
+			return Eval_func_def(st)
 		}
 	case parser.ExpressionStmt:
 		{
-			eval_expr(st)
+			return eval_expr(st)
 		}
 	default:
-		panic("Unhandled type: " + stmt.String())
+		panic("Unhandled ast type: " + stmt.String())
 	}
 }
 
-func Eval_func_def(fn parser.FuncDefStmt) /*TODO:*/ {
-	// fn_call := fn.Body.Stmts[0].(parser.ExpressionStmt) // FIXME: remove hard coding
-	//
-	// if fn_call.Type != parser.EXPR_FUNC_CALL {
-	// 	panic("Expected function call got: " + fn_call.Type)
-	// }
-	// eval_func_call(fn_call.Value.AsFuncCall)
-
+func Eval_func_def(fn parser.FuncDefStmt) EvalObj {
+	// TODO: handle params, don't return anything just add the function definition onto the context
 	for _, stmt := range fn.Body.Stmts {
-		eval_stmt(stmt)
+		eval_ast(stmt)
 	}
+
+	return nil // FIXME: fix this shit nigger
 }
 
-func eval_expr(expr parser.ExpressionStmt) int64 { // FIXME: add proper return system using structs prolly
+func eval_expr(expr parser.ExpressionStmt) EvalObj { // FIXME: add proper return system using structs prolly
 	switch expr.Type {
 	case parser.EXPR_TYPE_FUNC:
 		{
@@ -49,7 +50,9 @@ func eval_expr(expr parser.ExpressionStmt) int64 { // FIXME: add proper return s
 		}
 	case parser.EXPR_TYPE_INT:
 		{
-			return eval_bin_expr(expr.Value.AsBinOp)
+			return IntObj{
+				Value: int(eval_bin_expr(expr.Value.AsBinOp)), // FIXME: fix this shit
+			}
 		}
 	default:
 		{
@@ -58,21 +61,22 @@ func eval_expr(expr parser.ExpressionStmt) int64 { // FIXME: add proper return s
 	}
 }
 
-func eval_func_call(fnc parser.FuncCallExpr) int64 {
+func eval_func_call(fnc parser.FuncCallExpr) EvalObj {
+	// FIXME: replace with fetching the function definition, extending the context and thus evaluating the block statements
 	expr := fnc.Args[0]
 	value := eval_bin_expr(expr.Value.AsBinOp)
 
-	if fnc.Ident != "print" {
-		panic("Something else popped up (other then ur cheerry heheheh): " + fnc.Ident)
+	if fnc.Ident.Name != "print" {
+		panic("Something else popped up (other then ur cheerry heheheh): " + fnc.Ident.Name)
 	}
 
 	// call print
 	fmt.Println(value)
 
-	return 0
+	return EVAL_NULL_OBJ
 }
 
-func eval_bin_expr(bin_expr parser.BinaryExpr) int64 {
+func eval_bin_expr(bin_expr parser.BinaryExpr) int64 { // FIXME: proper return type, this ain't gonna cut it bro
 	left := bin_expr.Left.Value.AsInt.Value
 	right := bin_expr.Right.Value.AsInt.Value
 

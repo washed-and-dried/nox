@@ -42,9 +42,17 @@ func (e ExpressionStmt) String() string {
 	return fmt.Sprintf("ExpressionStmt of type [%s]", e.Type)
 }
 
+type Identifier struct {
+    Name string
+}
+
+func (i Identifier) String() string {
+    return fmt.Sprintf("Identifier [%s]", i.Name)
+}
+
 type FuncDefStmt struct {
 	Body  *BodyStatement
-	Ident string
+	Ident Identifier
 	// Params []*ExpressionStmt
 }
 
@@ -61,7 +69,7 @@ func (b BodyStatement) String() string {
 }
 
 type FuncCallExpr struct {
-	Ident string
+	Ident Identifier
 	Args  []ExpressionStmt
 }
 
