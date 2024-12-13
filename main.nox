@@ -5,3 +5,5 @@ fn main() {
     print(10 * 18);
     print(100 % 18);
 }
+
+main();

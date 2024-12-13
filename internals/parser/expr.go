@@ -119,7 +119,11 @@ func (p *Parser) parse_func_calls() ExpressionStmt {
 	name := p.expect_token_type(token.IDENT).Literal
 	p.expect_token_type(token.OPEN_PARAN)
 
-	args := []ExpressionStmt{p.parse_expr()} // TODO: handle args, assume just "1 + 1" for now
+    //FIXME: this shit is fking hard coded, fix it!!!
+    args := []ExpressionStmt{}
+    if p.tok.Type != token.CLOSE_PARAN { // if there are args to the functions!
+        args = []ExpressionStmt{p.parse_expr()} // TODO: handle args, assume just "1 + 1" for now
+    }
 
 	p.expect_token_type(token.CLOSE_PARAN)
 
