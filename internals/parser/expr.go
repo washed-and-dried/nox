@@ -127,7 +127,7 @@ func (p *Parser) parse_func_calls() ExpressionStmt {
 		Type: EXPR_TYPE_FUNC,
 		Value: ExprValue{
 			AsFuncCall: FuncCallExpr{
-				Ident: name,
+				Ident: Identifier{Name: name},
 				Args:  args,
 			},
 		},

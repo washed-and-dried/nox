@@ -82,7 +82,7 @@ func (p *Parser) Parse_func_def() FuncDefStmt {
 	body := p.parse_body()
 
 	return FuncDefStmt{
-		Ident: ident,
+        Ident: Identifier{Name: ident},
 		Body:  &body,
 	}
 }

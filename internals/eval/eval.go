@@ -13,45 +13,61 @@ var (
 
 // FIXME: add struct Eval with context
 func Eval_program(program *parser.Program) {
+    ctx := EvalContext{
+        objs: map[string]EvalObj{},
+    }
+
 	for _, stmt := range program.Stmts {
-		eval_ast(stmt)
+		eval_ast(stmt, &ctx)
 	}
 }
 
-func eval_ast(stmt parser.Statement) EvalObj {
+func eval_ast(stmt parser.Statement, ctx *EvalContext) EvalObj {
 	switch st := stmt.(type) {
 	case parser.FuncDefStmt:
 		{
-			return Eval_func_def(st)
+			return Eval_func_def(st, ctx)
 		}
 	case parser.ExpressionStmt:
 		{
-			return eval_expr(st)
+			return eval_expr(st, ctx)
 		}
 	default:
 		panic("Unhandled ast type: " + stmt.String())
 	}
 }
 
-func Eval_func_def(fn parser.FuncDefStmt) EvalObj {
+func Eval_func_def(fn parser.FuncDefStmt, ctx *EvalContext) EvalObj {
 	// TODO: handle params, don't return anything just add the function definition onto the context
 	for _, stmt := range fn.Body.Stmts {
-		eval_ast(stmt)
+		eval_ast(stmt, ctx)
 	}
 
 	return nil // FIXME: fix this shit nigger
 }
 
-func eval_expr(expr parser.ExpressionStmt) EvalObj { // FIXME: add proper return system using structs prolly
+func eval_expr(expr parser.ExpressionStmt, ctx *EvalContext) EvalObj { // FIXME: add proper return system using structs prolly
 	switch expr.Type {
 	case parser.EXPR_TYPE_FUNC:
 		{
-			return eval_func_call(expr.Value.AsFuncCall)
+			return eval_func_call(expr.Value.AsFuncCall, ctx)
 		}
 	case parser.EXPR_TYPE_INT:
 		{
 			return IntObj{
+				Value: int(expr.Value.AsInt.Value), // FIXME: fix this shit
+			}
+		}
+	case parser.EXPR_TYPE_BIN:
+		{
+			return IntObj{
 				Value: int(eval_bin_expr(expr.Value.AsBinOp)), // FIXME: fix this shit
+			}
+		}
+    case parser.EXPR_TYPE_STR: // FIXME: idk about this, please check
+		{
+			return StrObj{
+				Value: expr.Value.AsStr.Value,
 			}
 		}
 	default:
@@ -61,17 +77,17 @@ func eval_expr(expr parser.ExpressionStmt) EvalObj { // FIXME: add proper return
 	}
 }
 
-func eval_func_call(fnc parser.FuncCallExpr) EvalObj {
+func eval_func_call(fnc parser.FuncCallExpr, ctx *EvalContext) EvalObj {
 	// FIXME: replace with fetching the function definition, extending the context and thus evaluating the block statements
 	expr := fnc.Args[0]
-	value := eval_bin_expr(expr.Value.AsBinOp)
+	value := eval_ast(expr, ctx)
 
 	if fnc.Ident.Name != "print" {
 		panic("Something else popped up (other then ur cheerry heheheh): " + fnc.Ident.Name)
 	}
 
 	// call print
-	fmt.Println(value)
+	fmt.Println(value.(IntObj).Value)
 
 	return EVAL_NULL_OBJ
 }
