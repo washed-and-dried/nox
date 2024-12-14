@@ -3,7 +3,7 @@ fn main() {
     print(1 + 1);
     print(1 / 1);
     print(10 * 18);
-    print(100 % 18);
+    print("something");
 }
 
 main();

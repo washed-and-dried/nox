@@ -10,7 +10,6 @@ var (
 	EVAL_ERROR_OBJ = ErrorObj{}
 )
 
-// FIXME: add struct Eval with context
 func Eval_program(program *parser.Program) {
 	ctx := EvalContext{
 		objs: map[string]EvalObj{},
