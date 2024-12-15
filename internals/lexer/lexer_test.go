@@ -11,6 +11,7 @@ func TestLexer(t *testing.T) {
     fn main() {
         print(1 + 1);
         print("Hello World!");
+        return;
     }
     -*/%;
     `
@@ -35,6 +36,9 @@ func TestLexer(t *testing.T) {
 		{Literal: "(", Type: OPEN_PARAN},
 		{Literal: "Hello World!", Type: STR},
 		{Literal: ")", Type: CLOSE_PARAN},
+		{Literal: ";", Type: SEMICOLON},
+
+		{Literal: "return", Type: RETURN},
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "}", Type: CLOSE_CURLY},

@@ -14,6 +14,7 @@ const (
 	SEMICOLON
 
 	IDENT
+    RETURN
 
 	OPEN_PARAN
 	CLOSE_PARAN
@@ -71,6 +72,7 @@ func IsBinaryOperator(tokType TokenType) bool {
 func IsKeyword(lit string) (TokenType, bool) {
     switch lit {
     case "fn": return FUNC, true
+    case "return": return RETURN, true
     default:
         return EOF, false
     }
