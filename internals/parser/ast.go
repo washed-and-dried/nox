@@ -43,11 +43,11 @@ func (e ExpressionStmt) String() string {
 }
 
 type Identifier struct {
-    Name string
+	Name string
 }
 
 func (i Identifier) String() string {
-    return fmt.Sprintf("Identifier [%s]", i.Name)
+	return fmt.Sprintf("Identifier [%s]", i.Name)
 }
 
 type FuncDefStmt struct {
@@ -58,6 +58,15 @@ type FuncDefStmt struct {
 
 func (f FuncDefStmt) String() string {
 	return fmt.Sprintf("FuncDefExpr [%s]", f.Ident)
+}
+
+type ReturnStmt struct {
+	ExprStmt ExpressionStmt
+	Void     bool
+}
+
+func (r ReturnStmt) String() string {
+	return fmt.Sprintf("ReturnStmtExpr [%s]", r.ExprStmt.Value.AsStr)
 }
 
 type BodyStatement struct {
