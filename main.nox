@@ -1,9 +1,14 @@
+fn do() {
+    print("did something");
+}
+
 fn main() {
     print(2 - 12);
     print(1 + 1);
     print(1 / 1);
     print(10 * 18);
     print("something");
+    do();
     return;
 }
 
