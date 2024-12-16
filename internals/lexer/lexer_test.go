@@ -12,6 +12,7 @@ func TestLexer(t *testing.T) {
         print(1 + 1);
         print("Hello World!");
         return;
+        return 1 % 2;
     }
     -*/%;
     `
@@ -39,6 +40,12 @@ func TestLexer(t *testing.T) {
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "return", Type: RETURN},
+		{Literal: ";", Type: SEMICOLON},
+
+		{Literal: "return", Type: RETURN},
+		{Literal: "1", Type: INT},
+		{Literal: "%", Type: BIN_MODULO},
+		{Literal: "2", Type: INT},
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "}", Type: CLOSE_CURLY},
