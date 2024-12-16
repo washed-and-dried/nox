@@ -66,7 +66,7 @@ type ReturnStmt struct {
 }
 
 func (r ReturnStmt) String() string {
-	return fmt.Sprintf("ReturnStmtExpr [%s]", r.ExprStmt.Value.AsStr)
+	return fmt.Sprintf("ReturnStmtExpr [%s]", r.ExprStmt.String())
 }
 
 type BodyStatement struct {
