@@ -34,6 +34,18 @@ func eval_ast(stmt parser.Statement, ctx *EvalContext) EvalObj {
 		{
 			return eval_identifier(st, ctx)
 		}
+	case parser.ReturnStmt:
+		{
+			if st.Void { // if the return statement is empty "return;"
+				return ReturnObj{
+					Value: EVAL_NULL_OBJ,
+				}
+			}
+
+			return ReturnObj{
+				Value: eval_ast(st.ExprStmt, ctx),
+			}
+		}
 	case parser.BodyStatement:
 		{
 			return eval_block_stmts(st, ctx)
@@ -119,8 +131,7 @@ func eval_func_call(fn_def EvalObj, args *[]EvalObj, ctx *EvalContext) EvalObj {
 			extendedEnv := extendFunctionEnv(fn, args, ctx)
 			evaluated := eval_ast(fn.Body, extendedEnv)
 
-			// return unwrapReturnValue(evaluated);
-			return evaluated
+			return unwrapReturnValue(evaluated);
 		}
 	case BuiltinFuncObj:
 		{
@@ -131,16 +142,27 @@ func eval_func_call(fn_def EvalObj, args *[]EvalObj, ctx *EvalContext) EvalObj {
 	}
 }
 
+func unwrapReturnValue(obj EvalObj) EvalObj {
+    if ret, ok := obj.(ReturnObj); ok {
+        return ret.Value
+    }
+
+    return obj
+}
+
 func eval_block_stmts(body parser.BodyStatement, ctx *EvalContext) EvalObj {
-	var res EvalObj = EVAL_NULL_OBJ
+	// TODO: [DISCUSS] We would consider that if there are no return statements, the function will return NULL
+	// var res EvalObj = EVAL_NULL_OBJ
 
 	for _, stmt := range body.Stmts {
-		res = eval_ast(stmt, ctx)
+		res := eval_ast(stmt, ctx)
 
-		// FIXME: handle ReturnValue once we implement return statements
+		if res.Type() == EVAL_RETURN {
+			return res
+		}
 	}
 
-	return res
+	return EVAL_NULL_OBJ
 }
 
 func extendFunctionEnv(fn FuncDefObj, args *[]EvalObj, ctx *EvalContext) *EvalContext {

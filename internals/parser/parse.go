@@ -57,7 +57,10 @@ func (p *Parser) parse_statement() Statement {
 		return p.Parse_func_def()
 	case token.RETURN:
 		{
-			if p.peekTok.Type == token.SEMICOLON {
+            p.expect_token_type(token.RETURN)
+
+			if p.tok.Type == token.SEMICOLON {
+                p.expect_token_type(token.SEMICOLON)
 				return ReturnStmt{
 					Void: true,
 				}

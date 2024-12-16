@@ -14,6 +14,7 @@ const (
 	EVAL_STR          = "string"
 	EVAL_NULL         = "null"
 	EVAL_ERROR        = "error"
+	EVAL_RETURN       = "return"
 )
 
 type EvalObj interface {
@@ -87,6 +88,14 @@ type StrObj struct {
 
 func (s StrObj) Type() ObjType {
 	return EVAL_STR
+}
+
+type ReturnObj struct {
+	Value EvalObj
+}
+
+func (r ReturnObj) Type() ObjType {
+	return EVAL_RETURN
 }
 
 type EvalContext struct {
