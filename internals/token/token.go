@@ -12,9 +12,11 @@ type TokenType int
 const (
 	EOF = iota
 	SEMICOLON
+    COLON
 
 	IDENT
     RETURN
+    LET
 
 	OPEN_PARAN
 	CLOSE_PARAN
@@ -43,6 +45,7 @@ const (
 func (tokType TokenType) String() string {
     switch tokType {
     case IDENT: return "ident"
+    case RETURN: return "return"
 
     case OPEN_PARAN: return "("
     case CLOSE_PARAN: return ")"
@@ -52,6 +55,8 @@ func (tokType TokenType) String() string {
 
     // types
     case INT: return "int"
+    case TYPE_INT: return "type_int"
+    case STR: return "str"
     case FUNC: return "fn"
 
     // operators
@@ -62,6 +67,7 @@ func (tokType TokenType) String() string {
     case BIN_MODULO: return "%"
 
     case SEMICOLON: return ";"
+    case COLON: return ":"
     case EOF: return "eof"
     default:
         panic("unhandled token type")
@@ -74,6 +80,7 @@ func IsBinaryOperator(tokType TokenType) bool {
 
 func IsKeyword(lit string) (TokenType, bool) {
     switch lit {
+    case "let": return LET, true
     case "int": return TYPE_INT, true
     case "fn": return FUNC, true
     case "return": return RETURN, true

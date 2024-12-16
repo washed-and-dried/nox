@@ -23,6 +23,8 @@ func (l *Lexer) NextToken() token.Token {
 		tok = token.Token{Literal: string(l.ch), Type: token.ASSIGN, Pos: l.pos}
 	case ';':
 		tok = token.Token{Literal: string(l.ch), Type: token.SEMICOLON, Pos: l.pos}
+    case ':':
+		tok = token.Token{Literal: string(l.ch), Type: token.COLON, Pos: l.pos}
 	case NULL_CHAR:
 		tok = token.Token{Literal: "", Type: token.EOF, Pos: l.pos}
 
