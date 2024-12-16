@@ -83,6 +83,22 @@ func (p *Parser) parse_statement() Statement {
 				return nil // TODO: handle variable assigments statements
 			}
 		}
+    case token.LET:
+        {
+            p.expect_token_type(token.LET)
+            ident := p.expect_token_type(token.IDENT).Literal
+            p.expect_token_type(token.COLON)
+            tok:= p.tok
+            p.next_token()
+            p.expect_token_type(token.ASSIGN)
+            expr := p.parse_expr()
+            p.expect_token_type(token.SEMICOLON)
+            return AssignStmt{
+                Type: tok,
+                Value: expr,
+                Ident: ident,
+            }
+        }
 	default:
 		panic("Unhandled statement type: " + p.tok.Type.String())
 	}

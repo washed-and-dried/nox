@@ -69,6 +69,16 @@ func (r ReturnStmt) String() string {
 	return fmt.Sprintf("ReturnStmtExpr [%s]", r.ExprStmt.String())
 }
 
+type AssignStmt struct {
+	Type  token.Token
+	Ident string
+	Value ExpressionStmt
+}
+
+func (a AssignStmt) String() string {
+	return fmt.Sprintf("AssignStmt type [%s] with value [%s]", a.Type.Type.String(), a.Value.String())
+}
+
 type BodyStatement struct {
 	Stmts []Statement
 }

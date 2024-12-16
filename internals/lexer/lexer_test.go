@@ -10,6 +10,7 @@ func TestLexer(t *testing.T) {
 	input := `
     fn main() {
         let a: int = 1;
+        a/2;
         print(1 + 1);
         print("Hello World!");
         return;
@@ -32,6 +33,11 @@ func TestLexer(t *testing.T) {
 		{Literal: "int", Type: TYPE_INT},
 		{Literal: "=", Type: ASSIGN},
 		{Literal: "1", Type: INT},
+		{Literal: ";", Type: SEMICOLON},
+
+		{Literal: "a", Type: IDENT},
+		{Literal: "/", Type: BIN_DIVIDE},
+		{Literal: "2", Type: INT},
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "print", Type: IDENT},

@@ -3,8 +3,8 @@ fn do() {
 }
 
 fn main() {
-    let a: int = 1;
-    print(a/1);
+    let a: int = 16;
+    print(a / 2);
     print("something");
     do();
     return;

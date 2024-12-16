@@ -13,11 +13,13 @@ const (
 	EXPR_TYPE_FUNC = "func_call"
 	EXPR_TYPE_BIN  = "bin_op"
 	EXPR_TYPE_INT  = "int"
-    EXPR_TYPE_STR = "str"
+	EXPR_TYPE_STR  = "str"
+	EXPR_TYPE_VAR  = "var"
 )
 
 type ExprValue struct {
 	AsStr      StrExpr
+	AsVar      Identifier
 	AsFuncCall FuncCallExpr
 	AsBinOp    BinaryExpr
 	AsInt      IntExpr
@@ -94,7 +96,11 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 			if p.expect_peek(token.OPEN_PARAN) { // function calls
 				return p.parse_func_calls()
 			} else {
-				return ExpressionStmt{} // TODO: handle variables
+				return ExpressionStmt{
+					Type: EXPR_TYPE_VAR, Value: ExprValue{
+						AsVar: Identifier{p.expect_token_type(token.IDENT).Literal},
+					},
+				}
 			}
 		}
 	case token.OPEN_PARAN: // (..Expr..)
@@ -119,11 +125,11 @@ func (p *Parser) parse_func_calls() ExpressionStmt {
 	name := p.expect_token_type(token.IDENT).Literal
 	p.expect_token_type(token.OPEN_PARAN)
 
-    //FIXME: this shit is fking hard coded, fix it!!!
-    args := []ExpressionStmt{}
-    if p.tok.Type != token.CLOSE_PARAN { // if there are args to the functions!
-        args = []ExpressionStmt{p.parse_expr()} // TODO: handle args, assume just "1 + 1" for now
-    }
+	// FIXME: this shit is fking hard coded, fix it!!!
+	args := []ExpressionStmt{}
+	if p.tok.Type != token.CLOSE_PARAN { // if there are args to the functions!
+		args = []ExpressionStmt{p.parse_expr()} // TODO: handle args, assume just "1 + 1" for now
+	}
 
 	p.expect_token_type(token.CLOSE_PARAN)
 

@@ -1,6 +1,7 @@
 package eval
 
 import (
+	"fmt"
 	"nox/internals/parser"
 	"nox/internals/token"
 )
@@ -29,6 +30,11 @@ func eval_ast(stmt parser.Statement, ctx *EvalContext) EvalObj {
 	case parser.ExpressionStmt:
 		{
 			return eval_expr(st, ctx)
+		}
+	case parser.AssignStmt:
+		{
+			ctx.objs[st.Ident] = eval_ast(st.Value, ctx)
+			return EVAL_NULL_OBJ
 		}
 	case parser.Identifier:
 		{
@@ -107,6 +113,12 @@ func eval_expr(expr parser.ExpressionStmt, ctx *EvalContext) EvalObj {
 				Value: expr.Value.AsStr.Value,
 			}
 		}
+	case parser.EXPR_TYPE_VAR:
+		{
+			uwu := eval_ast(expr.Value.AsVar, ctx)
+			fmt.Println(uwu)
+			return uwu // FIXME: fix this shit
+		}
 	default:
 		{
 			panic("You fucked up, unhandled expression type: " + expr.Type)
@@ -131,7 +143,7 @@ func eval_func_call(fn_def EvalObj, args *[]EvalObj, ctx *EvalContext) EvalObj {
 			extendedEnv := extendFunctionEnv(fn, args, ctx)
 			evaluated := eval_ast(fn.Body, extendedEnv)
 
-			return unwrapReturnValue(evaluated);
+			return unwrapReturnValue(evaluated)
 		}
 	case BuiltinFuncObj:
 		{
@@ -143,11 +155,11 @@ func eval_func_call(fn_def EvalObj, args *[]EvalObj, ctx *EvalContext) EvalObj {
 }
 
 func unwrapReturnValue(obj EvalObj) EvalObj {
-    if ret, ok := obj.(ReturnObj); ok {
-        return ret.Value
-    }
+	if ret, ok := obj.(ReturnObj); ok {
+		return ret.Value
+	}
 
-    return obj
+	return obj
 }
 
 func eval_block_stmts(body parser.BodyStatement, ctx *EvalContext) EvalObj {
@@ -174,7 +186,7 @@ func extendFunctionEnv(fn FuncDefObj, args *[]EvalObj, ctx *EvalContext) *EvalCo
 }
 
 func eval_bin_expr(bin_expr parser.BinaryExpr) int64 { // FIXME: proper return type, this ain't gonna cut it bro
-	left := bin_expr.Left.Value.AsInt.Value
+    left := bin_expr.Left.Value.AsInt.Value // FIXME: fixmeplz
 	right := bin_expr.Right.Value.AsInt.Value
 
 	switch bin_expr.Operator.Type {
