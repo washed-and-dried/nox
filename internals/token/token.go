@@ -20,9 +20,11 @@ const (
 	CLOSE_PARAN
 	OPEN_CURLY
 	CLOSE_CURLY
+    ASSIGN
 
 	// types
 	INT
+    TYPE_INT
     STR
 	FUNC
 
@@ -46,6 +48,7 @@ func (tokType TokenType) String() string {
     case CLOSE_PARAN: return ")"
     case OPEN_CURLY: return "{"
     case CLOSE_CURLY: return "}"
+    case ASSIGN: return "="
 
     // types
     case INT: return "int"
@@ -71,6 +74,7 @@ func IsBinaryOperator(tokType TokenType) bool {
 
 func IsKeyword(lit string) (TokenType, bool) {
     switch lit {
+    case "int": return TYPE_INT, true
     case "fn": return FUNC, true
     case "return": return RETURN, true
     default:

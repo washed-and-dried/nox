@@ -9,6 +9,7 @@ import (
 func TestLexer(t *testing.T) {
 	input := `
     fn main() {
+        int a = 1;
         print(1 + 1);
         print("Hello World!");
         return;
@@ -24,6 +25,12 @@ func TestLexer(t *testing.T) {
 		{Literal: ")", Type: CLOSE_PARAN},
 
 		{Literal: "{", Type: OPEN_CURLY},
+
+		{Literal: "int", Type: TYPE_INT},
+		{Literal: "a", Type: IDENT},
+		{Literal: "=", Type: ASSIGN},
+		{Literal: "1", Type: INT},
+		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "print", Type: IDENT},
 		{Literal: "(", Type: OPEN_PARAN},
