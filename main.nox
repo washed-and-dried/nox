@@ -1,12 +1,12 @@
 fn do() {
-    print("did something");
+    return 100 + 10;
 }
 
 fn main() {
-    let a: int = 16;
+    let a: int = do();
+    print(a);
     print(a / 2);
     print("something");
-    do();
     return;
 }
 
