@@ -97,7 +97,8 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 				return p.parse_func_calls()
 			} else {
 				return ExpressionStmt{
-					Type: EXPR_TYPE_VAR, Value: ExprValue{
+					Type: EXPR_TYPE_VAR,
+                    Value: ExprValue{
 						AsVar: Identifier{p.expect_token_type(token.IDENT).Literal},
 					},
 				}

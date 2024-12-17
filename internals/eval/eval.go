@@ -1,7 +1,6 @@
 package eval
 
 import (
-	"fmt"
 	"nox/internals/parser"
 	"nox/internals/token"
 )
@@ -103,9 +102,7 @@ func eval_expr(expr parser.ExpressionStmt, ctx *EvalContext) EvalObj {
 		}
 	case parser.EXPR_TYPE_BIN:
 		{
-			return IntObj{
-				Value: int(eval_bin_expr(expr.Value.AsBinOp)), // FIXME: fix this shit
-			}
+			return eval_bin_expr(expr.Value.AsBinOp, ctx)
 		}
 	case parser.EXPR_TYPE_STR: // FIXME: idk about this, please check
 		{
@@ -115,9 +112,7 @@ func eval_expr(expr parser.ExpressionStmt, ctx *EvalContext) EvalObj {
 		}
 	case parser.EXPR_TYPE_VAR:
 		{
-			uwu := eval_ast(expr.Value.AsVar, ctx)
-			fmt.Println(uwu)
-			return uwu // FIXME: fix this shit
+			return eval_ast(expr.Value.AsVar, ctx)
 		}
 	default:
 		{
@@ -185,22 +180,41 @@ func extendFunctionEnv(fn FuncDefObj, args *[]EvalObj, ctx *EvalContext) *EvalCo
 	return extended
 }
 
-func eval_bin_expr(bin_expr parser.BinaryExpr) int64 { // FIXME: proper return type, this ain't gonna cut it bro
-    left := bin_expr.Left.Value.AsInt.Value // FIXME: fixmeplz
-	right := bin_expr.Right.Value.AsInt.Value
+func eval_bin_expr(bin_expr parser.BinaryExpr, ctx *EvalContext) EvalObj {
+    left := eval_ast(*bin_expr.Left, ctx) //NOTE: we would have to dereference both left and right since they are pointers due to recursive types
+	right := eval_ast(*bin_expr.Right, ctx)
 
-	switch bin_expr.Operator.Type {
+	if left.Type() == EVAL_INT && right.Type() == EVAL_INT {
+		return perform_bin_operation_int(left, right, bin_expr.Operator)
+	} else {
+		// FIXME: for now only allow operations between ints
+		panic("Illegal operation between: " + left.Type() + " and " + right.Type())
+	}
+}
+
+func perform_bin_operation_int(left EvalObj, right EvalObj, operator token.Token) EvalObj {
+	// be careful with the types since we might introduce 32 and 64 bit ints separately
+
+	lval := left.(IntObj).Value
+	rval := right.(IntObj).Value
+	var res int
+
+	switch operator.Type {
 	case token.BIN_PLUS:
-		return left + right
+		res = lval + rval
 	case token.BIN_MINUS:
-		return left - right
+		res = lval - rval
 	case token.BIN_ASTERIC:
-		return left * right
+		res = lval * rval
 	case token.BIN_DIVIDE:
-		return left / right
+		res = lval / rval
 	case token.BIN_MODULO:
-		return left % right
+		res = lval % rval
 	default:
 		panic("Unhandled operator")
+	}
+
+	return IntObj{
+		Value: res,
 	}
 }
