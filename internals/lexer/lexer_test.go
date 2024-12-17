@@ -9,6 +9,7 @@ import (
 func TestLexer(t *testing.T) {
 	input := `
     fn main() {
+        for (let i: int = 0; i == 10 && i < 5; i = i + 1) {}
         let a: int = 1;
         a/2;
         print(1 + 1);
@@ -19,7 +20,7 @@ func TestLexer(t *testing.T) {
     }
     -*/%;
     `
-	toks := []Token{
+    toks := []Token{ // FIXME: handle !=, <=, >= & similar cases
 		{Literal: "fn", Type: FUNC},
 
 		{Literal: "main", Type: IDENT},
@@ -28,9 +29,37 @@ func TestLexer(t *testing.T) {
 
 		{Literal: "{", Type: OPEN_CURLY},
 
+		{Literal: "for", Type: FOR},
+		{Literal: "(", Type: OPEN_PARAN},
+		{Literal: "let", Type: LET},
+		{Literal: "i", Type: IDENT},
+		{Literal: ":", Type: COLON},
+		{Literal: "int", Type: TYPE_INT},
+		{Literal: "=", Type: ASSIGN},
+		{Literal: "0", Type: INT},
+		{Literal: ";", Type: SEMICOLON},
+		{Literal: "i", Type: IDENT},
+		{Literal: "==", Type: BIN_EQUAL},
+		{Literal: "10", Type: INT},
+
+		{Literal: "&&", Type: BIN_AND},
+		{Literal: "i", Type: IDENT},
+		{Literal: "<", Type: BIN_LESS_THAN},
+		{Literal: "5", Type: INT},
+
+		{Literal: ";", Type: SEMICOLON},
+		{Literal: "i", Type: IDENT},
+		{Literal: "=", Type: ASSIGN},
+		{Literal: "i", Type: IDENT},
+		{Literal: "+", Type: BIN_PLUS},
+		{Literal: "1", Type: INT},
+		{Literal: ")", Type: CLOSE_PARAN},
+		{Literal: "{", Type: OPEN_CURLY},
+		{Literal: "}", Type: CLOSE_CURLY},
+
 		{Literal: "let", Type: LET},
 		{Literal: "a", Type: IDENT},
-        {Literal: ":", Type: COLON},
+		{Literal: ":", Type: COLON},
 		{Literal: "int", Type: TYPE_INT},
 		{Literal: "=", Type: ASSIGN},
 		{Literal: "1", Type: INT},
@@ -57,7 +86,7 @@ func TestLexer(t *testing.T) {
 
 		{Literal: "let", Type: LET},
 		{Literal: "str", Type: IDENT},
-        {Literal: ":", Type: COLON},
+		{Literal: ":", Type: COLON},
 		{Literal: "string", Type: TYPE_STR},
 		{Literal: "=", Type: ASSIGN},
 		{Literal: "something", Type: STR},

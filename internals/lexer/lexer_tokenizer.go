@@ -19,11 +19,18 @@ func (l *Lexer) NextToken() token.Token {
 		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_CURLY, Pos: l.pos}
 	case '}':
 		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_CURLY, Pos: l.pos}
-    case '=':
-		tok = token.Token{Literal: string(l.ch), Type: token.ASSIGN, Pos: l.pos}
+	case '=':
+		{
+			if c, _ := l.peek_next_char(); c == '=' {
+				tok = token.Token{Literal: string("=="), Type: token.BIN_EQUAL, Pos: l.pos}
+				l.read_char()
+			} else {
+				tok = token.Token{Literal: string(l.ch), Type: token.ASSIGN, Pos: l.pos}
+			}
+		}
 	case ';':
 		tok = token.Token{Literal: string(l.ch), Type: token.SEMICOLON, Pos: l.pos}
-    case ':':
+	case ':':
 		tok = token.Token{Literal: string(l.ch), Type: token.COLON, Pos: l.pos}
 	case NULL_CHAR:
 		tok = token.Token{Literal: "", Type: token.EOF, Pos: l.pos}
@@ -44,6 +51,36 @@ func (l *Lexer) NextToken() token.Token {
 		tok = token.Token{Literal: string(l.ch), Type: token.BIN_DIVIDE, Pos: l.pos}
 	case '%':
 		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MODULO, Pos: l.pos}
+
+	case '<':
+		tok = token.Token{Literal: string(l.ch), Type: token.BIN_LESS_THAN, Pos: l.pos}
+
+	case '>':
+		tok = token.Token{Literal: string(l.ch), Type: token.BIN_GREATER_THAN, Pos: l.pos}
+
+	case '&':
+        {
+			if c, _ := l.peek_next_char(); c == '&' {
+				tok = token.Token{Literal: string("&&"), Type: token.BIN_AND, Pos: l.pos}
+				l.read_char()
+			} else {
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_BITWISE_AND, Pos: l.pos}
+			}
+        }
+
+	case '|':
+        {
+			if c, _ := l.peek_next_char(); c == '|' {
+				tok = token.Token{Literal: string("||"), Type: token.BIN_OR, Pos: l.pos}
+				l.read_char()
+			} else {
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_BITWISE_OR, Pos: l.pos}
+			}
+        }
+
+	case '!':
+		tok = token.Token{Literal: string(l.ch), Type: token.BIN_NOT, Pos: l.pos}
+
 	default:
 		{
 			if unicode.IsDigit(l.ch) { // TODO: handle floating point and hexadecimal numbers

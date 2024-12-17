@@ -17,6 +17,7 @@ const (
 	IDENT
     RETURN
     LET
+    FOR
 
 	OPEN_PARAN
 	CLOSE_PARAN
@@ -40,13 +41,27 @@ const (
     BIN_DIVIDE
     BIN_MODULO
 
+    BIN_LESS_THAN
+    BIN_GREATER_THAN
+    BIN_EQUAL
+
+    BIN_AND
+    BIN_OR
+    BIN_NOT
+
+    BIN_BITWISE_AND
+    BIN_BITWISE_OR
+
     BIN_OP_END
+
 )
 
 func (tokType TokenType) String() string {
     switch tokType {
     case IDENT: return "ident"
     case RETURN: return "return"
+    case LET: return "let"
+    case FOR: return "for"
 
     case OPEN_PARAN: return "("
     case CLOSE_PARAN: return ")"
@@ -68,6 +83,17 @@ func (tokType TokenType) String() string {
     case BIN_DIVIDE: return "/"
     case BIN_MODULO: return "%"
 
+    case BIN_LESS_THAN   : return "<"
+    case BIN_GREATER_THAN: return ">"
+    case BIN_EQUAL       : return "=="
+
+    case BIN_AND         : return "&&"
+    case BIN_OR          : return "||"
+    case BIN_NOT         : return "!"
+
+    case BIN_BITWISE_AND : return "&"
+    case BIN_BITWISE_OR  : return "|"
+
     case SEMICOLON: return ";"
     case COLON: return ":"
     case EOF: return "eof"
@@ -83,6 +109,7 @@ func IsBinaryOperator(tokType TokenType) bool {
 func IsKeyword(lit string) (TokenType, bool) {
     switch lit {
     case "let": return LET, true
+    case "for": return FOR, true
     case "int": return TYPE_INT, true
     case "string": return TYPE_STR, true
     case "fn": return FUNC, true
