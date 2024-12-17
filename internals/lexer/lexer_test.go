@@ -13,6 +13,7 @@ func TestLexer(t *testing.T) {
         a/2;
         print(1 + 1);
         print("Hello World!");
+        let str: string = "something";
         return;
         return 1 % 2;
     }
@@ -52,6 +53,14 @@ func TestLexer(t *testing.T) {
 		{Literal: "(", Type: OPEN_PARAN},
 		{Literal: "Hello World!", Type: STR},
 		{Literal: ")", Type: CLOSE_PARAN},
+		{Literal: ";", Type: SEMICOLON},
+
+		{Literal: "let", Type: LET},
+		{Literal: "str", Type: IDENT},
+        {Literal: ":", Type: COLON},
+		{Literal: "string", Type: TYPE_STR},
+		{Literal: "=", Type: ASSIGN},
+		{Literal: "something", Type: STR},
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "return", Type: RETURN},

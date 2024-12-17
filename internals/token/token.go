@@ -28,6 +28,7 @@ const (
 	INT
     TYPE_INT
     STR
+    TYPE_STR
 	FUNC
 
 	// operator
@@ -57,6 +58,7 @@ func (tokType TokenType) String() string {
     case INT: return "int"
     case TYPE_INT: return "type_int"
     case STR: return "str"
+    case TYPE_STR: return "type_str"
     case FUNC: return "fn"
 
     // operators
@@ -82,6 +84,7 @@ func IsKeyword(lit string) (TokenType, bool) {
     switch lit {
     case "let": return LET, true
     case "int": return TYPE_INT, true
+    case "string": return TYPE_STR, true
     case "fn": return FUNC, true
     case "return": return RETURN, true
     default:

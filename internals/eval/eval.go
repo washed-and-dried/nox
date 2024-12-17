@@ -32,7 +32,11 @@ func eval_ast(stmt parser.Statement, ctx *EvalContext) EvalObj {
 		}
 	case parser.AssignStmt:
 		{
-			ctx.objs[st.Ident] = eval_ast(st.Value, ctx)
+            val := eval_ast(st.Value, ctx)
+
+            check_type_compliant(val, st.Type.Type) // check if type and value aligns
+
+			ctx.objs[st.Ident] = val
 			return EVAL_NULL_OBJ
 		}
 	case parser.Identifier:
@@ -217,4 +221,15 @@ func perform_bin_operation_int(left EvalObj, right EvalObj, operator token.Token
 	return IntObj{
 		Value: res,
 	}
+}
+
+func check_type_compliant(val EvalObj, dt token.TokenType) {
+    // for now our types are string, and int
+    if val.Type() == EVAL_INT && dt == token.TYPE_INT {
+        return
+    } else if val.Type() == EVAL_STR && dt == token.TYPE_STR {
+        return;
+    }
+
+    panic("Unmatched data type and value: want " + dt.String() + " got: " + string(val.Type()))
 }

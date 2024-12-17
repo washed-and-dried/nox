@@ -6,7 +6,8 @@ fn main() {
     let a: int = do();
     print(a);
     print(a / 2);
-    print("something");
+    let str: string = "something";
+    print(str);
     return;
 }
 
