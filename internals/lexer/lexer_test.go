@@ -9,7 +9,7 @@ import (
 func TestLexer(t *testing.T) {
 	input := `
     fn main() {
-        for (let i: int = 0; i == 10 && i < 5; i = i + 1) {}
+        for (let i: int = 0; i != 10 & i <= 5; i = i + 1) {}
         let a: int = 1;
         a/2;
         print(1 + 1);
@@ -20,7 +20,7 @@ func TestLexer(t *testing.T) {
     }
     -*/%;
     `
-    toks := []Token{ // FIXME: handle !=, <=, >= & similar cases
+	toks := []Token{
 		{Literal: "fn", Type: FUNC},
 
 		{Literal: "main", Type: IDENT},
@@ -39,12 +39,12 @@ func TestLexer(t *testing.T) {
 		{Literal: "0", Type: INT},
 		{Literal: ";", Type: SEMICOLON},
 		{Literal: "i", Type: IDENT},
-		{Literal: "==", Type: BIN_EQUAL},
+		{Literal: "!=", Type: BIN_NOT_EQUAL},
 		{Literal: "10", Type: INT},
 
-		{Literal: "&&", Type: BIN_AND},
+		{Literal: "&", Type: BIN_BITWISE_AND},
 		{Literal: "i", Type: IDENT},
-		{Literal: "<", Type: BIN_LESS_THAN},
+		{Literal: "<=", Type: BIN_LESS_THAN_EQUAL},
 		{Literal: "5", Type: INT},
 
 		{Literal: ";", Type: SEMICOLON},

@@ -42,8 +42,11 @@ const (
     BIN_MODULO
 
     BIN_LESS_THAN
+    BIN_LESS_THAN_EQUAL
     BIN_GREATER_THAN
+    BIN_GREATER_THAN_EQUAL
     BIN_EQUAL
+    BIN_NOT_EQUAL
 
     BIN_AND
     BIN_OR
@@ -84,8 +87,11 @@ func (tokType TokenType) String() string {
     case BIN_MODULO: return "%"
 
     case BIN_LESS_THAN   : return "<"
+    case BIN_LESS_THAN_EQUAL: return "<="
     case BIN_GREATER_THAN: return ">"
+    case BIN_GREATER_THAN_EQUAL: return ">="
     case BIN_EQUAL       : return "=="
+    case BIN_NOT_EQUAL: return "!="
 
     case BIN_AND         : return "&&"
     case BIN_OR          : return "||"

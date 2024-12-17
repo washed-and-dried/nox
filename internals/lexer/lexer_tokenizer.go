@@ -53,33 +53,54 @@ func (l *Lexer) NextToken() token.Token {
 		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MODULO, Pos: l.pos}
 
 	case '<':
-		tok = token.Token{Literal: string(l.ch), Type: token.BIN_LESS_THAN, Pos: l.pos}
+		{
+			if c, _ := l.peek_next_char(); c == '=' {
+				tok = token.Token{Literal: string("<="), Type: token.BIN_LESS_THAN_EQUAL, Pos: l.pos}
+				l.read_char()
+			} else {
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_LESS_THAN, Pos: l.pos}
+			}
+		}
 
 	case '>':
-		tok = token.Token{Literal: string(l.ch), Type: token.BIN_GREATER_THAN, Pos: l.pos}
+		{
+			if c, _ := l.peek_next_char(); c == '=' {
+				tok = token.Token{Literal: string(">="), Type: token.BIN_GREATER_THAN_EQUAL, Pos: l.pos}
+				l.read_char()
+			} else {
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_GREATER_THAN, Pos: l.pos}
+			}
+		}
 
 	case '&':
-        {
+		{
 			if c, _ := l.peek_next_char(); c == '&' {
 				tok = token.Token{Literal: string("&&"), Type: token.BIN_AND, Pos: l.pos}
 				l.read_char()
 			} else {
 				tok = token.Token{Literal: string(l.ch), Type: token.BIN_BITWISE_AND, Pos: l.pos}
 			}
-        }
+		}
 
 	case '|':
-        {
+		{
 			if c, _ := l.peek_next_char(); c == '|' {
 				tok = token.Token{Literal: string("||"), Type: token.BIN_OR, Pos: l.pos}
 				l.read_char()
 			} else {
 				tok = token.Token{Literal: string(l.ch), Type: token.BIN_BITWISE_OR, Pos: l.pos}
 			}
-        }
+		}
 
 	case '!':
-		tok = token.Token{Literal: string(l.ch), Type: token.BIN_NOT, Pos: l.pos}
+		{
+			if c, _ := l.peek_next_char(); c == '=' {
+				tok = token.Token{Literal: string("!="), Type: token.BIN_NOT_EQUAL, Pos: l.pos}
+				l.read_char()
+			} else {
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_NOT, Pos: l.pos}
+			}
+		}
 
 	default:
 		{
