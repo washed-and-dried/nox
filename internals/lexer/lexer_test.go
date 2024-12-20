@@ -12,6 +12,7 @@ func TestLexer(t *testing.T) {
         for (let i: int = 0; i != 10 & i <= 5; i = i + 1) {}
         let a: int = 1;
         a/2;
+        a = a + 1;
         print(1 + 1);
         print("Hello World!");
         let str: string = "something";
@@ -68,6 +69,13 @@ func TestLexer(t *testing.T) {
 		{Literal: "a", Type: IDENT},
 		{Literal: "/", Type: BIN_DIVIDE},
 		{Literal: "2", Type: INT},
+		{Literal: ";", Type: SEMICOLON},
+
+		{Literal: "a", Type: IDENT},
+		{Literal: "=", Type: ASSIGN},
+		{Literal: "a", Type: IDENT},
+		{Literal: "+", Type: BIN_PLUS},
+		{Literal: "1", Type: INT},
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "print", Type: IDENT},

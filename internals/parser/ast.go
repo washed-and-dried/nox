@@ -121,3 +121,12 @@ type StrExpr struct {
 func (s StrExpr) String() string {
 	return fmt.Sprintf("StrAST with value [%s]", s.Value)
 }
+
+type VarUpdation struct {
+	Var   Identifier
+	Value ExpressionStmt
+}
+
+func (v VarUpdation) String() string {
+	return fmt.Sprintf("VarUpdation: [%s] = [%s]", v.Var, v.Value)
+}

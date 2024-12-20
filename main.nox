@@ -3,9 +3,9 @@ fn do() {
 }
 
 fn main() {
-    for (var i: int = 0; i < 10; i = i + 1) {}
     let a: int = do();
     print(a);
+    a = 10;
     print(a / 2);
     let str: string = "something";
     print(str);

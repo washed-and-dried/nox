@@ -57,10 +57,10 @@ func (p *Parser) parse_statement() Statement {
 		return p.Parse_func_def()
 	case token.RETURN:
 		{
-            p.expect_token_type(token.RETURN)
+			p.expect_token_type(token.RETURN)
 
 			if p.tok.Type == token.SEMICOLON {
-                p.expect_token_type(token.SEMICOLON)
+				p.expect_token_type(token.SEMICOLON)
 				return ReturnStmt{
 					Void: true,
 				}
@@ -79,26 +79,38 @@ func (p *Parser) parse_statement() Statement {
 				expr_stmt := p.parse_expr()
 				p.expect_token_type(token.SEMICOLON) // expr stmts must end with a semicolon
 				return expr_stmt
-			} else {
-				return nil // TODO: handle variable assigments statements
+			} else { // handle var updation: a = a + 1
+				varName := p.expect_token_type(token.IDENT).Literal
+
+				p.expect_token_type(token.ASSIGN)
+
+				value := p.parse_expr()
+                p.expect_token_type(token.SEMICOLON)
+
+				return VarUpdation{
+					Var: Identifier{
+						Name: varName,
+					},
+					Value: value,
+				}
 			}
 		}
-    case token.LET:
-        {
-            p.expect_token_type(token.LET)
-            ident := p.expect_token_type(token.IDENT).Literal
-            p.expect_token_type(token.COLON)
-            tok:= p.tok
-            p.next_token()
-            p.expect_token_type(token.ASSIGN)
-            expr := p.parse_expr()
-            p.expect_token_type(token.SEMICOLON)
-            return AssignStmt{
-                Type: tok,
-                Value: expr,
-                Ident: ident,
-            }
-        }
+	case token.LET:
+		{
+			p.expect_token_type(token.LET)
+			ident := p.expect_token_type(token.IDENT).Literal
+			p.expect_token_type(token.COLON)
+			tok := p.tok
+			p.next_token()
+			p.expect_token_type(token.ASSIGN)
+			expr := p.parse_expr()
+			p.expect_token_type(token.SEMICOLON)
+			return AssignStmt{
+				Type:  tok,
+				Value: expr,
+				Ident: ident,
+			}
+		}
 	default:
 		panic("Unhandled statement type: " + p.tok.Type.String())
 	}

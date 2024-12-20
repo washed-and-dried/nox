@@ -39,6 +39,17 @@ func eval_ast(stmt parser.Statement, ctx *EvalContext) EvalObj {
 			ctx.objs[st.Ident] = val
 			return EVAL_NULL_OBJ
 		}
+    case parser.VarUpdation:
+        {
+            updatedValue := eval_ast(st.Value, ctx)
+
+            if ctx.Get(st.Var.Name) == EVAL_NULL_OBJ {
+                panic("No variable named: " + st.Var.Name)
+            }
+
+            ctx.objs[st.Var.Name] = updatedValue
+            return EVAL_NULL_OBJ
+        }
 	case parser.Identifier:
 		{
 			return eval_identifier(st, ctx)
