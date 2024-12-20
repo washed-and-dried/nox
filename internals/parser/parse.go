@@ -85,7 +85,7 @@ func (p *Parser) parse_statement() Statement {
 				p.expect_token_type(token.ASSIGN)
 
 				value := p.parse_expr()
-                p.expect_token_type(token.SEMICOLON)
+				p.expect_token_type(token.SEMICOLON)
 
 				return VarUpdation{
 					Var: Identifier{
@@ -111,6 +111,8 @@ func (p *Parser) parse_statement() Statement {
 				Ident: ident,
 			}
 		}
+	case token.FOR:
+		return p.parse_for_stmt()
 	default:
 		panic("Unhandled statement type: " + p.tok.Type.String())
 	}
@@ -146,6 +148,30 @@ func (p *Parser) parse_body() BodyStatement {
 
 	return BodyStatement{
 		Stmts: stmts,
+	}
+}
+
+func (p *Parser) parse_for_stmt() ForStmt {
+	p.expect_token_type(token.FOR)        // for
+	p.expect_token_type(token.OPEN_PARAN) // (
+
+	// FIXME: check for for statements such as: for(i; ;)
+	init := p.parse_statement() // let i: int = 10;
+
+	cond := p.parse_expr()
+	p.expect_token_type(token.SEMICOLON) // semicolon after expression: i < 10;
+
+	updation := p.parse_statement() // i = i + 1
+
+	p.expect_token_type(token.CLOSE_PARAN) // )
+
+	body := p.parse_body() // {...body...}
+
+	return ForStmt{
+		Init:     init,
+		Cond:     cond,
+		Updation: updation,
+		Body:     body,
 	}
 }
 

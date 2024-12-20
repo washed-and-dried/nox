@@ -130,3 +130,14 @@ type VarUpdation struct {
 func (v VarUpdation) String() string {
 	return fmt.Sprintf("VarUpdation: [%s] = [%s]", v.Var, v.Value)
 }
+
+type ForStmt struct {
+    Init Statement
+    Cond Statement
+    Updation Statement
+    Body BodyStatement
+}
+
+func (f ForStmt) String() string {
+    return fmt.Sprintf("ForStmt")
+}
