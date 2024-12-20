@@ -18,6 +18,7 @@ const (
     RETURN
     LET
     FOR
+    IF
 
 	OPEN_PARAN
 	CLOSE_PARAN
@@ -67,6 +68,7 @@ func (tokType TokenType) String() string {
     case RETURN: return "return"
     case LET: return "let"
     case FOR: return "for"
+    case IF: return "if"
 
     case OPEN_PARAN: return "("
     case CLOSE_PARAN: return ")"
@@ -118,6 +120,7 @@ func IsKeyword(lit string) (TokenType, bool) {
     switch lit {
     case "let": return LET, true
     case "for": return FOR, true
+    case "if": return IF, true
     case "int": return TYPE_INT, true
     case "string": return TYPE_STR, true
     case "fn": return FUNC, true

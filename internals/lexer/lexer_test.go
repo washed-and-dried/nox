@@ -9,6 +9,7 @@ import (
 func TestLexer(t *testing.T) {
 	input := `
     fn main() {
+        if (let i: int = 0; i != 10;) {}
         for (let i: int = 0; i != 10 & i <= 5; i = i + 1) {}
         let a: int = 1;
         a/2;
@@ -31,6 +32,25 @@ func TestLexer(t *testing.T) {
 		{Literal: ")", Type: CLOSE_PARAN},
 
 		{Literal: "{", Type: OPEN_CURLY},
+
+		{Literal: "if", Type: IF},
+		{Literal: "(", Type: OPEN_PARAN},
+
+		{Literal: "let", Type: LET},
+		{Literal: "i", Type: IDENT},
+		{Literal: ":", Type: COLON},
+		{Literal: "int", Type: TYPE_INT},
+		{Literal: "=", Type: ASSIGN},
+		{Literal: "0", Type: INT},
+		{Literal: ";", Type: SEMICOLON},
+		{Literal: "i", Type: IDENT},
+		{Literal: "!=", Type: BIN_NOT_EQUAL},
+		{Literal: "10", Type: INT},
+		{Literal: ";", Type: SEMICOLON},
+
+		{Literal: ")", Type: CLOSE_PARAN},
+		{Literal: "{", Type: OPEN_CURLY},
+		{Literal: "}", Type: CLOSE_CURLY},
 
 		{Literal: "for", Type: FOR},
 		{Literal: "(", Type: OPEN_PARAN},
@@ -81,12 +101,12 @@ func TestLexer(t *testing.T) {
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "true", Type: BOOL_TRUE},
-        {Literal: "==", Type: BIN_EQUAL},
+		{Literal: "==", Type: BIN_EQUAL},
 		{Literal: "false", Type: BOOL_FALSE},
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "a", Type: IDENT},
-        {Literal: ">=", Type: BIN_GREATER_THAN_EQUAL},
+		{Literal: ">=", Type: BIN_GREATER_THAN_EQUAL},
 		{Literal: "5", Type: INT},
 		{Literal: ";", Type: SEMICOLON},
 
