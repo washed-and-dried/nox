@@ -140,7 +140,7 @@ func (v VarUpdation) String() string {
 }
 
 type ForStmt struct {
-    Init Statement
+    Init Statement // we are putting Statement since it  could be an empty statement like for(;;){...}
     Cond Statement
     Updation Statement
     Body BodyStatement

@@ -70,6 +70,10 @@ func eval_ast(stmt parser.Statement, ctx *EvalContext) EvalObj {
 		{
 			return eval_block_stmts(st, ctx)
 		}
+	case parser.ForStmt:
+		{
+			return eval_for_stmt(st, ctx)
+		}
 	default:
 		panic("Unhandled ast type: " + stmt.String())
 	}
@@ -176,6 +180,30 @@ func unwrapReturnValue(obj EvalObj) EvalObj {
 	}
 
 	return obj
+}
+
+func eval_for_stmt(stmt parser.ForStmt, ctx *EvalContext) EvalObj {
+	eval_ast(stmt.Init, ctx) // introduce the loop variable into the context
+
+	for ifBoolTrue(eval_ast(stmt.Cond, ctx)) {
+		if ret := eval_block_stmts(stmt.Body, ctx); ret.Type() == EVAL_RETURN {
+			return ret
+		}
+
+		eval_ast(stmt.Updation, ctx) // update the variable or other shit
+	}
+
+	return EVAL_NULL_OBJ
+}
+
+func ifBoolTrue(boolObj EvalObj) bool {
+	obj, ok := boolObj.(BoolObj)
+
+	if !ok {
+		panic("Value is not a bool value: " + boolObj.Type())
+	}
+
+	return obj.Value
 }
 
 func eval_block_stmts(body parser.BodyStatement, ctx *EvalContext) EvalObj {
