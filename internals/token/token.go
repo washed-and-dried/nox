@@ -31,6 +31,8 @@ const (
     STR
     TYPE_STR
 	FUNC
+    BOOL_TRUE
+    BOOL_FALSE
 
 	// operator
     BIN_OP_START
@@ -120,6 +122,8 @@ func IsKeyword(lit string) (TokenType, bool) {
     case "string": return TYPE_STR, true
     case "fn": return FUNC, true
     case "return": return RETURN, true
+    case "true": return BOOL_TRUE, true
+    case "false": return BOOL_FALSE, true
     default:
         return EOF, false
     }

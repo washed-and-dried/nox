@@ -13,6 +13,8 @@ func TestLexer(t *testing.T) {
         let a: int = 1;
         a/2;
         a = a + 1;
+        true == false;
+        a >= 5;
         print(1 + 1);
         print("Hello World!");
         let str: string = "something";
@@ -76,6 +78,16 @@ func TestLexer(t *testing.T) {
 		{Literal: "a", Type: IDENT},
 		{Literal: "+", Type: BIN_PLUS},
 		{Literal: "1", Type: INT},
+		{Literal: ";", Type: SEMICOLON},
+
+		{Literal: "true", Type: BOOL_TRUE},
+        {Literal: "==", Type: BIN_EQUAL},
+		{Literal: "false", Type: BOOL_FALSE},
+		{Literal: ";", Type: SEMICOLON},
+
+		{Literal: "a", Type: IDENT},
+        {Literal: ">=", Type: BIN_GREATER_THAN_EQUAL},
+		{Literal: "5", Type: INT},
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "print", Type: IDENT},
