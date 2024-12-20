@@ -123,11 +123,11 @@ func (s StrExpr) String() string {
 }
 
 type BoolExpr struct {
-    Value bool
+	Value bool
 }
 
 func (b BoolExpr) String() string {
-    return fmt.Sprintf("BoolExpr with value as %t", b.Value)
+	return fmt.Sprintf("BoolExpr with value as %t", b.Value)
 }
 
 type VarUpdation struct {
@@ -140,12 +140,22 @@ func (v VarUpdation) String() string {
 }
 
 type ForStmt struct {
-    Init Statement // we are putting Statement since it  could be an empty statement like for(;;){...}
-    Cond Statement
-    Updation Statement
-    Body BodyStatement
+	Init     Statement // we are putting Statement since it  could be an empty statement like for(;;){...}
+	Cond     Statement
+	Updation Statement
+	Body     BodyStatement
 }
 
 func (f ForStmt) String() string {
-    return fmt.Sprintf("ForStmt")
+	return fmt.Sprintf("ForStmt")
+}
+
+type IfStmt struct {
+	Init []Statement
+	Cond Statement
+	Body BodyStatement
+}
+
+func (f IfStmt) String() string {
+	return fmt.Sprintf("IfStmt")
 }

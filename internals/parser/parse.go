@@ -113,6 +113,8 @@ func (p *Parser) parse_statement() Statement {
 		}
 	case token.FOR:
 		return p.parse_for_stmt()
+	case token.IF:
+		return p.parse_if_stmt()
 	default:
 		panic("Unhandled statement type: " + p.tok.Type.String())
 	}
@@ -172,6 +174,21 @@ func (p *Parser) parse_for_stmt() ForStmt {
 		Cond:     cond,
 		Updation: updation,
 		Body:     body,
+	}
+}
+
+func (p *Parser) parse_if_stmt() IfStmt {
+	p.expect_token_type(token.IF)
+	p.expect_token_type(token.OPEN_PARAN)
+
+	cond := p.parse_expr()
+	p.expect_token_type(token.SEMICOLON)
+
+	body := p.parse_body()
+
+	return IfStmt{
+		Cond: cond,
+		Body: body,
 	}
 }
 

@@ -3,6 +3,9 @@ fn do() {
 }
 
 fn main() {
+    if (i != 10;) {
+        print("IF WORKED")
+    }
     for (let i: int = 0; i < 10; i = i + 1;) {
         print("Something");
         print(i);
