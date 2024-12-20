@@ -122,6 +122,14 @@ func (s StrExpr) String() string {
 	return fmt.Sprintf("StrAST with value [%s]", s.Value)
 }
 
+type BoolExpr struct {
+    Value bool
+}
+
+func (b BoolExpr) String() string {
+    return fmt.Sprintf("BoolExpr with value as %t", b.Value)
+}
+
 type VarUpdation struct {
 	Var   Identifier
 	Value ExpressionStmt

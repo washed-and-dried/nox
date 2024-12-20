@@ -15,6 +15,7 @@ const (
 	EXPR_TYPE_INT  = "int"
 	EXPR_TYPE_STR  = "str"
 	EXPR_TYPE_VAR  = "var"
+	EXPR_TYPE_BOOL = "bool"
 )
 
 type ExprValue struct {
@@ -23,6 +24,7 @@ type ExprValue struct {
 	AsFuncCall FuncCallExpr
 	AsBinOp    BinaryExpr
 	AsInt      IntExpr
+	AsBool     BoolExpr
 }
 
 func (p *Parser) parse_expr() ExpressionStmt {
@@ -91,6 +93,22 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 				},
 			}
 		}
+	case token.BOOL_TRUE, token.BOOL_FALSE:
+		{
+			value := true
+			if p.tok.Type == token.BOOL_FALSE {
+				value = false
+			}
+
+			return ExpressionStmt{
+				Type: EXPR_TYPE_BIN,
+				Value: ExprValue{
+					AsBool: BoolExpr{
+						Value: value,
+					},
+				},
+			}
+		}
 	case token.IDENT:
 		{
 			if p.expect_peek(token.OPEN_PARAN) { // function calls
@@ -98,7 +116,7 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 			} else {
 				return ExpressionStmt{
 					Type: EXPR_TYPE_VAR,
-                    Value: ExprValue{
+					Value: ExprValue{
 						AsVar: Identifier{p.expect_token_type(token.IDENT).Literal},
 					},
 				}
@@ -145,14 +163,20 @@ func (p *Parser) parse_func_calls() ExpressionStmt {
 	}
 }
 
-const MAX_PRECEDENCE = 2
+const MAX_PRECEDENCE = 3
 
 func (p *Parser) get_op_precedence(tokType token.TokenType) int {
 	switch tokType {
-	case token.BIN_PLUS, token.BIN_MINUS:
+    case token.BIN_AND, token.BIN_OR, token.BIN_NOT:
+		return 0
+	case token.BIN_GREATER_THAN_EQUAL, token.BIN_LESS_THAN_EQUAL,
+		token.BIN_LESS_THAN, token.BIN_GREATER_THAN,
+        token.BIN_EQUAL, token.BIN_NOT_EQUAL:
 		return 1
-	case token.BIN_ASTERIC, token.BIN_DIVIDE, token.BIN_MODULO:
+	case token.BIN_PLUS, token.BIN_MINUS:
 		return 2
+	case token.BIN_ASTERIC, token.BIN_DIVIDE, token.BIN_MODULO:
+		return 3
 	default:
 		panic("UNHANDLED OPERATOR PRECEDENCE: " + tokType.String())
 	}

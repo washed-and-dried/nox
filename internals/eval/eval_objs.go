@@ -12,6 +12,7 @@ const (
 	EVAL_BUILINT_FUNC = "builtin_func"
 	EVAL_INT          = "int"
 	EVAL_STR          = "string"
+	EVAL_BOOL          = "bool"
 	EVAL_NULL         = "null"
 	EVAL_ERROR        = "error"
 	EVAL_RETURN       = "return"
@@ -64,6 +65,8 @@ var builtins = map[string]BuiltinFuncObj{
 					fmt.Println(obj.Value)
 				case StrObj:
 					fmt.Println(obj.Value)
+                case BoolObj:
+                    fmt.Println(obj.Value)
 				default:
 					fmt.Printf("%T: %s\n", obj, obj)
 				}
@@ -88,6 +91,14 @@ type StrObj struct {
 
 func (s StrObj) Type() ObjType {
 	return EVAL_STR
+}
+
+type BoolObj struct {
+	Value bool
+}
+
+func (b BoolObj) Type() ObjType {
+	return EVAL_BOOL
 }
 
 type ReturnObj struct {

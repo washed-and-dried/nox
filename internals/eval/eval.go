@@ -32,24 +32,24 @@ func eval_ast(stmt parser.Statement, ctx *EvalContext) EvalObj {
 		}
 	case parser.AssignStmt:
 		{
-            val := eval_ast(st.Value, ctx)
+			val := eval_ast(st.Value, ctx)
 
-            check_type_compliant(val, st.Type.Type) // check if type and value aligns
+			check_type_compliant(val, st.Type.Type) // check if type and value aligns
 
 			ctx.objs[st.Ident] = val
 			return EVAL_NULL_OBJ
 		}
-    case parser.VarUpdation:
-        {
-            updatedValue := eval_ast(st.Value, ctx)
+	case parser.VarUpdation:
+		{
+			updatedValue := eval_ast(st.Value, ctx)
 
-            if ctx.Get(st.Var.Name) == EVAL_NULL_OBJ {
-                panic("No variable named: " + st.Var.Name)
-            }
+			if ctx.Get(st.Var.Name) == EVAL_NULL_OBJ {
+				panic("No variable named: " + st.Var.Name)
+			}
 
-            ctx.objs[st.Var.Name] = updatedValue
-            return EVAL_NULL_OBJ
-        }
+			ctx.objs[st.Var.Name] = updatedValue
+			return EVAL_NULL_OBJ
+		}
 	case parser.Identifier:
 		{
 			return eval_identifier(st, ctx)
@@ -125,6 +125,12 @@ func eval_expr(expr parser.ExpressionStmt, ctx *EvalContext) EvalObj {
 				Value: expr.Value.AsStr.Value,
 			}
 		}
+	case parser.EXPR_TYPE_BOOL:
+		{
+			return BoolObj{
+				Value: expr.Value.AsBool.Value,
+			}
+		}
 	case parser.EXPR_TYPE_VAR:
 		{
 			return eval_ast(expr.Value.AsVar, ctx)
@@ -196,11 +202,13 @@ func extendFunctionEnv(fn FuncDefObj, args *[]EvalObj, ctx *EvalContext) *EvalCo
 }
 
 func eval_bin_expr(bin_expr parser.BinaryExpr, ctx *EvalContext) EvalObj {
-    left := eval_ast(*bin_expr.Left, ctx) //NOTE: we would have to dereference both left and right since they are pointers due to recursive types
+	left := eval_ast(*bin_expr.Left, ctx) // NOTE: we would have to dereference both left and right since they are pointers due to recursive types
 	right := eval_ast(*bin_expr.Right, ctx)
 
 	if left.Type() == EVAL_INT && right.Type() == EVAL_INT {
 		return perform_bin_operation_int(left, right, bin_expr.Operator)
+	} else if left.Type() == EVAL_BOOL && right.Type() == EVAL_BOOL {
+		return perform_bin_operation_bool(left, right, bin_expr.Operator)
 	} else {
 		// FIXME: for now only allow operations between ints
 		panic("Illegal operation between: " + left.Type() + " and " + right.Type())
@@ -208,6 +216,10 @@ func eval_bin_expr(bin_expr parser.BinaryExpr, ctx *EvalContext) EvalObj {
 }
 
 func perform_bin_operation_int(left EvalObj, right EvalObj, operator token.Token) EvalObj {
+	boolObj := func(b bool) BoolObj { // FIXME: only temporary for satisfaction
+		return BoolObj{Value: b}
+	}
+
 	// be careful with the types since we might introduce 32 and 64 bit ints separately
 
 	lval := left.(IntObj).Value
@@ -225,6 +237,18 @@ func perform_bin_operation_int(left EvalObj, right EvalObj, operator token.Token
 		res = lval / rval
 	case token.BIN_MODULO:
 		res = lval % rval
+	case token.BIN_EQUAL: // FIXME: organise this shit, make it generic
+		return boolObj(lval == rval)
+	case token.BIN_NOT_EQUAL:
+		return boolObj(lval != rval)
+	case token.BIN_GREATER_THAN:
+		return boolObj(lval > rval)
+	case token.BIN_LESS_THAN:
+		return boolObj(lval < rval)
+	case token.BIN_GREATER_THAN_EQUAL:
+		return boolObj(lval >= rval)
+	case token.BIN_LESS_THAN_EQUAL:
+		return boolObj(lval <= rval)
 	default:
 		panic("Unhandled operator")
 	}
@@ -234,13 +258,33 @@ func perform_bin_operation_int(left EvalObj, right EvalObj, operator token.Token
 	}
 }
 
-func check_type_compliant(val EvalObj, dt token.TokenType) {
-    // for now our types are string, and int
-    if val.Type() == EVAL_INT && dt == token.TYPE_INT {
-        return
-    } else if val.Type() == EVAL_STR && dt == token.TYPE_STR {
-        return;
-    }
+func perform_bin_operation_bool(left EvalObj, right EvalObj, operator token.Token) EvalObj {
+	var res bool
+	lval := left.(BoolObj).Value
+	rval := right.(BoolObj).Value
 
-    panic("Unmatched data type and value: want " + dt.String() + " got: " + string(val.Type()))
+	switch operator.Type {
+	case token.BIN_AND:
+		res = lval && rval
+	case token.BIN_OR:
+		res = lval || rval
+	case token.BIN_NOT: // FIXME: handle this once we implement prefix operators
+	default:
+		panic("Unhandled operator: " + operator.Type.String())
+	}
+
+	return BoolObj{
+		Value: res,
+	}
+}
+
+func check_type_compliant(val EvalObj, dt token.TokenType) {
+	// for now our types are string, and int
+	if val.Type() == EVAL_INT && dt == token.TYPE_INT {
+		return
+	} else if val.Type() == EVAL_STR && dt == token.TYPE_STR {
+		return
+	}
+
+	panic("Unmatched data type and value: want " + dt.String() + " got: " + string(val.Type()))
 }
