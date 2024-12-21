@@ -120,7 +120,8 @@ func (e *EvalContext) Get(key string) EvalObj {
 
 	if !ok {
 		if e.outer == nil {
-			return EVAL_ERROR_OBJ
+            // return EVAL_ERROR_OBJ // FIXME: shouldn't panic but WHY NOT PANIC MFs
+            panic("No such identifier in the context: " + key)
 		} else {
 			return e.outer.Get(key)
 		}
