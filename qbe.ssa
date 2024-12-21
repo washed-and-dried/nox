@@ -1,0 +1,60 @@
+# Its just an example program or guideline that I would use moving on.
+# Will add if and for convertions once I figure out how to work with jumps
+
+# NOTE: Before moving forward, I need to figure out how to generate names for temporaries.
+# Its important to understand the conflicts that can arise due to non-SSA nature of QBE and scope of some constants.
+
+# fn do() {
+#     return 100 + 10;
+# }
+function w $do(w %a, w %b) {
+@start
+    %res =w add 100, 10
+    ret %res
+}
+
+# helper function to convert 0 or 1 to "true" or "false"
+function l $bit_to_bool_str(w %b) {
+@start
+    jnz %b, @true, @end
+@true
+    ret $true
+@end
+    ret $false
+}
+
+export function w $main() {
+@start
+# skipping if and for right now
+
+    # let a: int = do();
+    # print(a);
+    %a =w call $do()
+    call $printf(l $dfmt, ..., w %a)
+
+    # a = 50;
+    # print(a / 2);
+    %a =w copy 50
+    %a_div =w div %a, 2
+    call $printf(l $dfmt, ..., w %a_div)
+
+    # print(a >= 5 && a <= 50);
+    %a_flag1 =w csgew %a, 5
+    %a_flag2 =w cslew %a, 50
+    %cmp =w and %a_flag1, %a_flag2
+    %a_bool_rep =l call $bit_to_bool_str(w %cmp)
+    call $puts(l %a_bool_rep)
+
+    # let str: string = "something";
+    # print(str);
+    call $puts(l $str)
+
+    ret 0
+}
+
+data $dfmt = {b "%d\n", b 0}
+data $true = {b "true", b 0}
+data $false = {b "false", b 0}
+
+# let str: string = "something";
+data $str = {b "something", b 0}
