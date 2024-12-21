@@ -151,8 +151,9 @@ func (f ForStmt) String() string {
 }
 
 type IfStmt struct {
-	Init []Statement
 	Cond Statement
+	Init Statement
+	Else Statement
 	Body BodyStatement
 }
 

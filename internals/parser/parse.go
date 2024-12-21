@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"nox/internals/lexer"
 	"nox/internals/token"
 )
@@ -114,7 +115,7 @@ func (p *Parser) parse_statement() Statement {
 	case token.FOR:
 		return p.parse_for_stmt()
 	case token.IF:
-		return p.parse_if_stmt()
+		return p.parse_if_stmt(true)
 	default:
 		panic("Unhandled statement type: " + p.tok.Type.String())
 	}
@@ -177,16 +178,33 @@ func (p *Parser) parse_for_stmt() ForStmt {
 	}
 }
 
-func (p *Parser) parse_if_stmt() IfStmt {
-	p.expect_token_type(token.IF)
-	p.expect_token_type(token.OPEN_PARAN)
-
-	cond := p.parse_expr()
-	p.expect_token_type(token.SEMICOLON)
+func (p *Parser) parse_if_stmt(first bool) IfStmt {
+	cond := ExpressionStmt{}
+	isElse := p.tok.Type == token.ELSE
+	if first || (p.expect_token_type(token.ELSE).Type == token.ELSE && p.peekTok.Type == token.IF) {
+		p.expect_token_type(token.IF)
+		p.expect_token_type(token.OPEN_PARAN)
+		cond = p.parse_expr()
+		p.expect_token_type(token.SEMICOLON)
+		p.expect_token_type(token.CLOSE_PARAN)
+	}
 
 	body := p.parse_body()
 
+    var elseStmt Statement;
+    if p.tok.Type == token.ELSE {
+        if isElse {
+            panic(fmt.Sprintf("Redundant Else at %d", p.tok.Pos)) // TODO: better panic log
+        }
+        if p.peekTok.Type == token.IF {
+            elseStmt = p.parse_if_stmt(false)
+        } else {
+            elseStmt = p.parse_body()
+        }
+    }
+
 	return IfStmt{
+		Else: elseStmt,
 		Cond: cond,
 		Body: body,
 	}

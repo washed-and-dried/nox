@@ -9,7 +9,7 @@ import (
 func TestLexer(t *testing.T) {
 	input := `
     fn main() {
-        if (let i: int = 0; i != 10;) {}
+        if (let i: int = 0; i != 10;) {} else {}
         for (let i: int = 0; i != 10 & i <= 5; i = i + 1) {}
         let a: int = 1;
         a/2;
@@ -49,6 +49,10 @@ func TestLexer(t *testing.T) {
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: ")", Type: CLOSE_PARAN},
+		{Literal: "{", Type: OPEN_CURLY},
+		{Literal: "}", Type: CLOSE_CURLY},
+
+		{Literal: "else", Type: ELSE},
 		{Literal: "{", Type: OPEN_CURLY},
 		{Literal: "}", Type: CLOSE_CURLY},
 
