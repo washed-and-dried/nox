@@ -74,6 +74,10 @@ func eval_ast(stmt parser.Statement, ctx *EvalContext) EvalObj {
 		{
 			return eval_for_stmt(st, ctx)
 		}
+	case parser.IfStmt:
+		{
+			return eval_if_stmt(st, ctx)
+		}
 	default:
 		panic("Unhandled ast type: " + stmt.String())
 	}
@@ -191,6 +195,25 @@ func eval_for_stmt(stmt parser.ForStmt, ctx *EvalContext) EvalObj {
 		}
 
 		eval_ast(stmt.Updation, ctx) // update the variable or other shit
+	}
+
+	return EVAL_NULL_OBJ
+}
+
+func eval_if_stmt(stmt parser.Statement, ctx *EvalContext) EvalObj {
+	switch stmt := stmt.(type) {
+	case parser.IfStmt:
+		{
+			if ifBoolTrue(eval_ast(stmt.Cond, ctx)) {
+				return eval_block_stmts(stmt.Body, ctx)
+			} else {
+				return eval_if_stmt(stmt.Else, ctx)
+			}
+		}
+	case parser.BodyStatement:
+		{
+			return eval_block_stmts(stmt, ctx)
+		}
 	}
 
 	return EVAL_NULL_OBJ
