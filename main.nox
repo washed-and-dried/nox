@@ -3,13 +3,13 @@ fn do() {
 }
 
 fn main() {
-    let x: int = 10;
-    if (x != 10;) {
+    let x: int = 8;
+    if (x == 10;) {
         print("IF WORKED");
     } else if (x == 9;) {
-        print("else if worked")
+        print("else if worked");
     } else {
-        print("else worked")
+        print("else worked");
     }
     for (let i: int = 0; i < 10; i = i + 1;) {
         print("Something");

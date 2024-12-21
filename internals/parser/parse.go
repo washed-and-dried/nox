@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"nox/internals/lexer"
 	"nox/internals/token"
 )
@@ -180,8 +179,8 @@ func (p *Parser) parse_for_stmt() ForStmt {
 
 func (p *Parser) parse_if_stmt(first bool) IfStmt {
 	cond := ExpressionStmt{}
-	isElse := p.tok.Type == token.ELSE
-	if first || (p.expect_token_type(token.ELSE).Type == token.ELSE && p.peekTok.Type == token.IF) {
+	// isElse := p.tok.Type == token.ELSE
+	if first || p.tok.Type == token.IF {
 		p.expect_token_type(token.IF)
 		p.expect_token_type(token.OPEN_PARAN)
 		cond = p.parse_expr()
@@ -191,17 +190,18 @@ func (p *Parser) parse_if_stmt(first bool) IfStmt {
 
 	body := p.parse_body()
 
-    var elseStmt Statement;
-    if p.tok.Type == token.ELSE {
-        if isElse {
-            panic(fmt.Sprintf("Redundant Else at %d", p.tok.Pos)) // TODO: better panic log
-        }
-        if p.peekTok.Type == token.IF {
-            elseStmt = p.parse_if_stmt(false)
-        } else {
-            elseStmt = p.parse_body()
-        }
-    }
+	var elseStmt Statement
+	if p.tok.Type == token.ELSE {
+		// if isElse {
+		//     panic(fmt.Sprintf("Redundant Else at %d", p.tok.Pos)) // TODO: better panic log
+		// }
+		p.next_token()
+		if p.tok.Type == token.IF {
+			elseStmt = p.parse_if_stmt(false)
+		} else {
+			elseStmt = p.parse_body()
+		}
+	}
 
 	return IfStmt{
 		Else: elseStmt,
