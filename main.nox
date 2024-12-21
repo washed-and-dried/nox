@@ -4,9 +4,9 @@ fn do() {
 
 fn main() {
     let x: int = 8;
-    if (x == 10;) {
+    if (x == 10) {
         print("IF WORKED");
-    } else if (x == 9;) {
+    } else if (x == 9) {
         print("else if worked");
     } else {
         print("else worked");

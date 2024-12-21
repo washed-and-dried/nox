@@ -184,7 +184,6 @@ func (p *Parser) parse_if_stmt(first bool) IfStmt {
 		p.expect_token_type(token.IF)
 		p.expect_token_type(token.OPEN_PARAN)
 		cond = p.parse_expr()
-		p.expect_token_type(token.SEMICOLON)
 		p.expect_token_type(token.CLOSE_PARAN)
 	}
 
