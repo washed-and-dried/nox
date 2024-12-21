@@ -72,11 +72,11 @@ func eval_ast(stmt parser.Statement, ctx *EvalContext) EvalObj {
 		}
 	case parser.ForStmt:
 		{
-			return eval_for_stmt(st, ctx)
+			return eval_for_stmt(st, ctx.CreateNewEnclosedCtx())
 		}
 	case parser.IfStmt:
 		{
-			return eval_if_stmt(st, ctx)
+			return eval_if_stmt(st, ctx.CreateNewEnclosedCtx())
 		}
 	default:
 		panic("Unhandled ast type: " + stmt.String())
