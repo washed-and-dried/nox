@@ -1,5 +1,6 @@
 Things to do:-
 
+- [ ] compiler (interpreter ackhtually) binary execution utils (input/output filenames, etc.)
 - [ ] assignment statements
 - [ ] Properly parse function params and calling args
 - [ ] Add data type support:- mainly function, int, uint, string, float
