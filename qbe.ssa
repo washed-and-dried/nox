@@ -49,10 +49,36 @@ export function w $main() {
     # print(str);
     call $puts(l $str)
 
+### If-else [didn't implement else-if yet]
+    %cmp =w copy 0
+    jnz %cmp, @test, @test1
+@test
+    %xx =w copy 7
+    jmp @endtest
+@test1
+    call $puts(l $true)
+@endtest
+    %yy =w phi @test 10, @test1 99
+    call $printf(l $dfmt, ..., w %yy)
+    #####
+
+### For loops
+    %i =w copy 0
+@loop
+    ### user's code
+    call $printf(l $L1, ..., w %i)
+    
+    ### systems
+    %i =w add %i, 1
+    %cond_eval =w csltw %i, 10
+    jnz %cond_eval, @loop, @endloop
+@endloop
+@retstmt
     ret 0
 }
 
 data $dfmt = {b "%d\n", b 0}
+data $L1 = {b "We are at: %d iteration\n", b 0}
 data $true = {b "true", b 0}
 data $false = {b "false", b 0}
 
