@@ -1,6 +1,7 @@
 package eval
 
 import (
+	"fmt"
 	"nox/internals/parser"
 	"nox/internals/token"
 )
@@ -143,6 +144,26 @@ func eval_expr(expr parser.ExpressionStmt, ctx *EvalContext) EvalObj {
 		{
 			return eval_ast(expr.Value.AsVar, ctx)
 		}
+	case parser.EXPR_TYPE_SUBSCRIPT:
+		{
+			sbs_expr := expr.Value.AsSubscript
+
+			ident := eval_ast(sbs_expr.Ident, ctx)
+            index := eval_ast(*sbs_expr.Index, ctx)
+
+            // FIXME: for now we will just return an StrObj because I am too lazy to implement print and equals for CharObj
+
+            if ident.Type() != EVAL_STR && index.Type() != EVAL_INT {
+                return EVAL_ERROR_OBJ
+            }
+
+            strObj, _ := ident.(StrObj)
+            intObj, _ := index.(IntObj)
+
+            return StrObj{
+                Value: string(strObj.Value[intObj.Value]),
+            }
+		}
 	default:
 		{
 			panic("You fucked up, unhandled expression type: " + expr.Type)
@@ -253,6 +274,11 @@ func extendFunctionEnv(fn FuncDefObj, args *[]EvalObj, ctx *EvalContext) *EvalCo
 }
 
 func eval_bin_expr(bin_expr parser.BinaryExpr, ctx *EvalContext) EvalObj {
+    if bin_expr.Left == nil || bin_expr.Right == nil {
+        fmt.Println("Left or right BinaryExpr was nil")
+        return EVAL_NULL_OBJ
+    }
+
 	left := eval_ast(*bin_expr.Left, ctx) // NOTE: we would have to dereference both left and right since they are pointers due to recursive types
 	right := eval_ast(*bin_expr.Right, ctx)
 
@@ -260,6 +286,8 @@ func eval_bin_expr(bin_expr parser.BinaryExpr, ctx *EvalContext) EvalObj {
 		return perform_bin_operation_int(left, right, bin_expr.Operator)
 	} else if left.Type() == EVAL_BOOL && right.Type() == EVAL_BOOL {
 		return perform_bin_operation_bool(left, right, bin_expr.Operator)
+	} else if left.Type() == EVAL_STR && right.Type() == EVAL_STR {
+		return perform_bin_operation_str(left, right, bin_expr.Operator)
 	} else {
 		// FIXME: for now only allow operations between ints
 		panic("Illegal operation between: " + left.Type() + " and " + right.Type())
@@ -320,6 +348,24 @@ func perform_bin_operation_bool(left EvalObj, right EvalObj, operator token.Toke
 	case token.BIN_OR:
 		res = lval || rval
 	case token.BIN_NOT: // FIXME: handle this once we implement prefix operators
+	default:
+		panic("Unhandled operator: " + operator.Type.String())
+	}
+
+	return BoolObj{
+		Value: res,
+	}
+}
+func perform_bin_operation_str(left EvalObj, right EvalObj, operator token.Token) EvalObj {
+    var res bool
+	lval := left.(StrObj).Value
+	rval := right.(StrObj).Value
+
+	switch operator.Type {
+	case token.BIN_EQUAL:
+		res = lval == rval
+    case token.BIN_NOT_EQUAL:
+		res = lval != rval
 	default:
 		panic("Unhandled operator: " + operator.Type.String())
 	}

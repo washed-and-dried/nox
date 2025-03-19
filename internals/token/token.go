@@ -25,6 +25,8 @@ const (
 	CLOSE_PARAN
 	OPEN_CURLY
 	CLOSE_CURLY
+	OPEN_SQUARE
+	CLOSE_SQUARE
     ASSIGN
 
 	// types
@@ -83,6 +85,8 @@ func (tokType TokenType) String() string {
     case TYPE_INT: return "type_int"
     case STR: return "str"
     case TYPE_STR: return "type_str"
+    case BOOL_TRUE: return "true"
+    case BOOL_FALSE: return "false"
     case FUNC: return "fn"
 
     // operators

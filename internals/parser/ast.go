@@ -130,6 +130,15 @@ func (b BoolExpr) String() string {
 	return fmt.Sprintf("BoolExpr with value as %t", b.Value)
 }
 
+type SubscriptExpr struct {
+	Index *ExpressionStmt
+    Ident Identifier
+}
+
+func (s SubscriptExpr) String() string {
+    return fmt.Sprintf("SubScriptExpr: %s[%d]", s.Ident.Name, s.Index)
+}
+
 type VarUpdation struct {
 	Var   Identifier
 	Value ExpressionStmt

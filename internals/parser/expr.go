@@ -16,6 +16,7 @@ const (
 	EXPR_TYPE_STR  = "str"
 	EXPR_TYPE_VAR  = "var"
 	EXPR_TYPE_BOOL = "bool"
+	EXPR_TYPE_SUBSCRIPT = "subscript"
 )
 
 type ExprValue struct {
@@ -25,6 +26,7 @@ type ExprValue struct {
 	AsBinOp    BinaryExpr
 	AsInt      IntExpr
 	AsBool     BoolExpr
+    AsSubscript SubscriptExpr
 }
 
 func (p *Parser) parse_expr() ExpressionStmt {
@@ -99,9 +101,10 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 			if p.tok.Type == token.BOOL_FALSE {
 				value = false
 			}
+            p.next_token()
 
 			return ExpressionStmt{
-				Type: EXPR_TYPE_BIN,
+				Type: EXPR_TYPE_BOOL,
 				Value: ExprValue{
 					AsBool: BoolExpr{
 						Value: value,
@@ -113,6 +116,8 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 		{
 			if p.expect_peek(token.OPEN_PARAN) { // function calls
 				return p.parse_func_calls()
+            } else if p.expect_peek(token.OPEN_SQUARE) { // subscript str[0] //FIXME: Make this into a statement since we can have mutability str[0] = 'b'
+				return p.parse_subscript()
 			} else {
 				return ExpressionStmt{
 					Type: EXPR_TYPE_VAR,
@@ -159,6 +164,24 @@ func (p *Parser) parse_func_calls() ExpressionStmt {
 				Ident: Identifier{Name: name},
 				Args:  args,
 			},
+		},
+	}
+}
+
+func (p *Parser) parse_subscript() ExpressionStmt {
+	name := p.expect_token_type(token.IDENT).Literal
+
+	p.expect_token_type(token.OPEN_SQUARE)
+    index := p.parse_expr()
+	p.expect_token_type(token.CLOSE_SQUARE)
+
+	return ExpressionStmt{
+		Type: EXPR_TYPE_SUBSCRIPT,
+		Value: ExprValue{
+            AsSubscript: SubscriptExpr{
+                Ident: Identifier{Name: name},
+                Index: &index,
+            },
 		},
 	}
 }

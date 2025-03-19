@@ -19,6 +19,10 @@ func (l *Lexer) NextToken() token.Token {
 		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_CURLY, Pos: l.pos}
 	case '}':
 		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_CURLY, Pos: l.pos}
+	case '[':
+		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_SQUARE, Pos: l.pos}
+	case ']':
+		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_SQUARE, Pos: l.pos}
 	case '=':
 		{
 			if c, _ := l.peek_next_char(); c == '=' {

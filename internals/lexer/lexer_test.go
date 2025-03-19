@@ -21,6 +21,7 @@ func TestLexer(t *testing.T) {
         let str: string = "something";
         return;
         return 1 % 2;
+        str[0];
     }
     -*/%;
     `
@@ -143,6 +144,12 @@ func TestLexer(t *testing.T) {
 		{Literal: "1", Type: INT},
 		{Literal: "%", Type: BIN_MODULO},
 		{Literal: "2", Type: INT},
+		{Literal: ";", Type: SEMICOLON},
+
+		{Literal: "str", Type: IDENT},
+		{Literal: "[", Type: OPEN_SQUARE},
+		{Literal: "0", Type: INT},
+		{Literal: "]", Type: CLOSE_SQUARE},
 		{Literal: ";", Type: SEMICOLON},
 
 		{Literal: "}", Type: CLOSE_CURLY},
