@@ -75,6 +75,21 @@ var builtins = map[string]BuiltinFuncObj{
 			return EVAL_NULL_OBJ
 		},
 	},
+    "len": {
+        fn: func(args ...EvalObj) EvalObj {
+            if len(args) != 1 {
+                return EVAL_ERROR_OBJ
+            }
+            strObj, ok := args[0].(StrObj)
+            if !ok {
+                return EVAL_ERROR_OBJ
+            }
+
+            return IntObj{
+                Value: len(strObj.Value),
+            }
+        },
+    },
 }
 
 type IntObj struct {

@@ -22,6 +22,9 @@ fn main() {
     print(a >= 5 && a <= 50);
     let str: string = "something";
     print(str);
+
+    let n: int = len(str);
+    print(n);
     return;
 }
 
