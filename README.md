@@ -11,6 +11,19 @@ fn retVal() {
     return 100 + 10;
 }
 
+fn isPalindrome() {
+    let palindrome: string = "naman";
+    let n: int = len(palindrome);
+
+    for (let i: int = 0; i <= n / 2; i = i + 1) {
+        if (palindrome[i] != palindrome[n - i - 1]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 fn main() {
     // assignments
     let a: int = retVal();
@@ -43,6 +56,8 @@ fn main() {
         print("Something");
         print(i);
     }
+
+    print(isPalindrome());
 
     return;
 }
