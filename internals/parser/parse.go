@@ -85,7 +85,9 @@ func (p *Parser) parse_statement() Statement {
 				p.expect_token_type(token.ASSIGN)
 
 				value := p.parse_expr()
-				p.expect_token_type(token.SEMICOLON)
+                if p.tok.Type != token.CLOSE_PARAN {
+                    p.expect_token_type(token.SEMICOLON)
+                }
 
 				return VarUpdation{
 					Var: Identifier{
