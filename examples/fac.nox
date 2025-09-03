@@ -1,0 +1,15 @@
+fn main() {
+    let n: int = 10;
+    let fac: int = 1;
+
+    for (let i: int = 1; i <= n; i = i + 1) {
+        fac = fac * i;
+    }
+
+    print("Factorial is:");
+    print(fac);
+
+    return;
+}
+
+main();

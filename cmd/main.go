@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	file := "main.nox"
+	file := "examples/triangle.nox"
 	p := parser.NewParser(file)
 	program := p.Parse_program()
 	eval.Eval_program(program)

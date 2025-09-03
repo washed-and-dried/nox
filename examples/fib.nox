@@ -1,0 +1,17 @@
+fn main(){
+    let a: int = 0;
+    let b: int = 1;
+
+    let n: int = 10;
+
+    for (let i: int = 0; i < n - 2; i = i + 1){
+        let j: int = a + b;
+        a = b;
+        b = j;
+    }
+
+    print(b);
+    return;
+}
+
+main();

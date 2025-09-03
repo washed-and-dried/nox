@@ -218,6 +218,12 @@ func eval_for_stmt(stmt parser.ForStmt, ctx *EvalContext) EvalObj {
 		eval_ast(stmt.Updation, ctx) // update the variable or other shit
 	}
 
+	for key := range ctx.objs {
+		if _, ok := ctx.outer.objs[key]; ok {
+			ctx.outer.objs[key] = ctx.objs[key]
+		}
+	}
+
 	return EVAL_NULL_OBJ
 }
 

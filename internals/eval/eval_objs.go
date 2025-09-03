@@ -62,11 +62,11 @@ var builtins = map[string]BuiltinFuncObj{
 			for _, arg := range args {
 				switch obj := arg.(type) {
 				case IntObj:
-					fmt.Println(obj.Value)
+					fmt.Print(obj.Value)
 				case StrObj:
-					fmt.Println(obj.Value)
+					fmt.Print(obj.Value)
                 case BoolObj:
-                    fmt.Println(obj.Value)
+                    fmt.Print(obj.Value)
 				default:
 					fmt.Printf("%T: %s\n", obj, obj)
 				}
