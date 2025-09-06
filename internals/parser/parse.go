@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"bufio"
 	"nox/internals/lexer"
 	"nox/internals/token"
 )
@@ -14,9 +15,9 @@ type Parser struct {
 	tok     token.Token
 }
 
-func NewParser(filePath string) *Parser {
+func NewParser(file *bufio.Reader) *Parser {
 	p := &Parser{
-		l: lexer.NewLexer(filePath),
+		l: lexer.NewLexer(file),
 	}
 
 	p.next_token() // set peekToken, tok
@@ -89,9 +90,9 @@ func (p *Parser) parse_statement() Statement {
 				p.expect_token_type(token.ASSIGN)
 
 				value := p.parse_expr()
-                if p.tok.Type != token.CLOSE_PARAN {
-                    p.expect_token_type(token.SEMICOLON)
-                }
+				if p.tok.Type != token.CLOSE_PARAN {
+					p.expect_token_type(token.SEMICOLON)
+				}
 
 				return VarUpdation{
 					Var: Identifier{

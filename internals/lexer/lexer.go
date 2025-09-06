@@ -3,7 +3,6 @@ package lexer
 import (
 	"bufio"
 	"io"
-	"os"
 	"strings"
 	"unicode/utf8"
 )
@@ -15,16 +14,9 @@ type Lexer struct {
 	pos_next int           // next position to peek next char
 }
 
-func NewLexer(filepath string) *Lexer {
-	// open file
-	file, err := os.Open(filepath)
-	if err != nil {
-		panic(err)
-	}
-	r := bufio.NewReader(file)
-
+func NewLexer(file *bufio.Reader) *Lexer {
 	l := &Lexer{
-		file: r,
+		file: file,
 	}
 
 	// sets ch, pos, pos_next
