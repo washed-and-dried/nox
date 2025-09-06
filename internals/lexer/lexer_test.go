@@ -18,10 +18,11 @@ func TestLexer(t *testing.T) {
         a >= 5;
         print(1 + 1);
         print("Hello World!");
-        let str: string = "something";
+        let str: string = "something"; // comment hahahha
         return;
         return 1 % 2;
         str[0];
+		// this should be ignored
     }
     -*/%;
     `

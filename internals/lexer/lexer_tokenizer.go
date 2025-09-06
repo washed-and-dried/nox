@@ -52,7 +52,14 @@ func (l *Lexer) NextToken() token.Token {
 	case '*':
 		tok = token.Token{Literal: string(l.ch), Type: token.BIN_ASTERIC, Pos: l.pos}
 	case '/':
-		tok = token.Token{Literal: string(l.ch), Type: token.BIN_DIVIDE, Pos: l.pos}
+		{
+			if c, _ := l.peek_next_char(); c == '/' {
+				l.skip_comment()
+				return l.NextToken()
+			} else {
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_DIVIDE, Pos: l.pos}
+			}
+		}
 	case '%':
 		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MODULO, Pos: l.pos}
 
@@ -133,7 +140,19 @@ func (l *Lexer) read_string() token.Token {
 			panic("newline char in regular str | your retarded ass doesn't understand common fucking strings")
 		} else if l.ch == strType {
 			break
-		} else if len(lit) >= MAX_STRING_SIZE {
+		} else if l.ch == '\\' {
+			l.read_char()
+			switch l.ch {
+			case 'n':
+				lit += string('\n')
+			case 't':
+				lit += string('\t')
+			case 'r':
+				lit += string('\r')
+			default:
+				lit += string(l.ch)
+			}
+		}else if len(lit) >= MAX_STRING_SIZE {
 			panic("len(str) > 256 or string wasn't closed | bro really thought this was javascript")
 		} else {
 			lit += string(l.ch)
@@ -175,4 +194,14 @@ func (l *Lexer) skip_bloat_chars() {
 	for unicode.IsSpace(l.ch) {
 		l.read_char()
 	}
+}
+
+func (l *Lexer) skip_comment() {
+	l.read_char()
+	l.read_char() // skip both the /
+
+	for l.ch != '\n' {
+		l.read_char()
+	}
+	l.read_char()
 }
