@@ -1,7 +1,55 @@
 fn main(){
-    print("\n");
+    let n: int = 5;
+
+    // *
+    // * *
+    // * * *
+    // * * * *
+    // * * * * *
+    for(let i: int = 0; i < n; i = i + 1) {
+        for(let j: int = 0; j < i + 1; j = j + 1) {
+            print("* ");
+        }
+        print("\n");
+    }
+
+    print("======================\n");
+
+
+    //     *
+    //    * *
+    //   * * *
+    //  * * * *
+    // * * * * *
+    for(let i: int = 0; i < n; i = i + 1) {
+        for(let j: int = 0; j < n - i - 1; j = j + 1) {
+            print(" ");
+        }
+
+        for(let j: int = 0; j < i + 1; j = j + 1) {
+            print("* ");
+        }
+        print("\n");
+    }
+
+    print("======================\n");
+
+
+    //         *
+    //       * *
+    //     * * *
+    //   * * * *
+    // * * * * *
+    for(let i: int = 0; i < n; i = i + 1) {
+        for(let j: int = 0; j < 2 * (n - i) - 2; j = j + 1) {
+            print(" ");
+        }
+
+        for(let j: int = 0; j < i + 1; j = j + 1) {
+            print("* ");
+        }
+        print("\n");
+    }
 
     return;
 }
-
-main();
