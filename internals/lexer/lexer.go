@@ -18,6 +18,7 @@ type Lexer struct {
 func NewLexer(file *bufio.Reader) *Lexer {
 	l := &Lexer{
 		file: file,
+		line_no: 0,
 	}
 
 	// sets ch, pos, pos_next
@@ -43,10 +44,13 @@ const NULL_CHAR = '\x00'
 func (l *Lexer) read_char() {
 	char, eof := l.read_next_from_file()
 	if eof {
-		l.line_no++;
 		l.ch = NULL_CHAR
 	} else {
 		l.ch = char
+	}
+
+	if l.ch == '\n' {
+		l.line_no++;
 	}
 
 	l.pos = l.pos_next

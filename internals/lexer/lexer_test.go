@@ -1,9 +1,10 @@
 package lexer_test
 
 import (
+	"testing"
+
 	"nox/internals/lexer"
 	. "nox/internals/token"
-	"testing"
 )
 
 func TestLexer(t *testing.T) {
@@ -27,141 +28,143 @@ func TestLexer(t *testing.T) {
     -*/%;
     `
 	toks := []Token{
-		{Literal: "fn", Type: FUNC},
+		{Literal: "fn", Type: FUNC, Line: 1},
 
-		{Literal: "main", Type: IDENT},
-		{Literal: "(", Type: OPEN_PARAN},
-		{Literal: ")", Type: CLOSE_PARAN},
+		{Literal: "main", Type: IDENT, Line: 1},
+		{Literal: "(", Type: OPEN_PARAN, Line: 1},
+		{Literal: ")", Type: CLOSE_PARAN, Line: 1},
 
-		{Literal: "{", Type: OPEN_CURLY},
+		{Literal: "{", Type: OPEN_CURLY, Line: 1},
 
-		{Literal: "if", Type: IF},
-		{Literal: "(", Type: OPEN_PARAN},
+		{Literal: "if", Type: IF, Line: 2},
+		{Literal: "(", Type: OPEN_PARAN, Line: 2},
 
-		{Literal: "let", Type: LET},
-		{Literal: "i", Type: IDENT},
-		{Literal: ":", Type: COLON},
-		{Literal: "int", Type: TYPE_INT},
-		{Literal: "=", Type: ASSIGN},
-		{Literal: "0", Type: INT},
-		{Literal: ";", Type: SEMICOLON},
-		{Literal: "i", Type: IDENT},
-		{Literal: "!=", Type: BIN_NOT_EQUAL},
-		{Literal: "10", Type: INT},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "let", Type: LET, Line: 2},
+		{Literal: "i", Type: IDENT, Line: 2},
+		{Literal: ":", Type: COLON, Line: 2},
+		{Literal: "int", Type: TYPE_INT, Line: 2},
+		{Literal: "=", Type: ASSIGN, Line: 2},
+		{Literal: "0", Type: INT, Line: 2},
+		{Literal: ";", Type: SEMICOLON, Line: 2},
+		{Literal: "i", Type: IDENT, Line: 2},
+		{Literal: "!=", Type: BIN_NOT_EQUAL, Line: 2},
+		{Literal: "10", Type: INT, Line: 2},
+		{Literal: ";", Type: SEMICOLON, Line: 2},
 
-		{Literal: ")", Type: CLOSE_PARAN},
-		{Literal: "{", Type: OPEN_CURLY},
-		{Literal: "}", Type: CLOSE_CURLY},
+		{Literal: ")", Type: CLOSE_PARAN, Line: 2},
+		{Literal: "{", Type: OPEN_CURLY, Line: 2},
+		{Literal: "}", Type: CLOSE_CURLY, Line: 2},
 
-		{Literal: "else", Type: ELSE},
-		{Literal: "{", Type: OPEN_CURLY},
-		{Literal: "}", Type: CLOSE_CURLY},
+		{Literal: "else", Type: ELSE, Line: 2},
+		{Literal: "{", Type: OPEN_CURLY, Line: 2},
+		{Literal: "}", Type: CLOSE_CURLY, Line: 2},
 
-		{Literal: "for", Type: FOR},
-		{Literal: "(", Type: OPEN_PARAN},
-		{Literal: "let", Type: LET},
-		{Literal: "i", Type: IDENT},
-		{Literal: ":", Type: COLON},
-		{Literal: "int", Type: TYPE_INT},
-		{Literal: "=", Type: ASSIGN},
-		{Literal: "0", Type: INT},
-		{Literal: ";", Type: SEMICOLON},
-		{Literal: "i", Type: IDENT},
-		{Literal: "!=", Type: BIN_NOT_EQUAL},
-		{Literal: "10", Type: INT},
+		{Literal: "for", Type: FOR, Line: 3},
+		{Literal: "(", Type: OPEN_PARAN, Line: 3},
+		{Literal: "let", Type: LET, Line: 3},
+		{Literal: "i", Type: IDENT, Line: 3},
+		{Literal: ":", Type: COLON, Line: 3},
+		{Literal: "int", Type: TYPE_INT, Line: 3},
+		{Literal: "=", Type: ASSIGN, Line: 3},
+		{Literal: "0", Type: INT, Line: 3},
+		{Literal: ";", Type: SEMICOLON, Line: 3},
+		{Literal: "i", Type: IDENT, Line: 3},
+		{Literal: "!=", Type: BIN_NOT_EQUAL, Line: 3},
+		{Literal: "10", Type: INT, Line: 3},
 
-		{Literal: "&", Type: BIN_BITWISE_AND},
-		{Literal: "i", Type: IDENT},
-		{Literal: "<=", Type: BIN_LESS_THAN_EQUAL},
-		{Literal: "5", Type: INT},
+		{Literal: "&", Type: BIN_BITWISE_AND, Line: 3},
+		{Literal: "i", Type: IDENT, Line: 3},
+		{Literal: "<=", Type: BIN_LESS_THAN_EQUAL, Line: 3},
+		{Literal: "5", Type: INT, Line: 3},
 
-		{Literal: ";", Type: SEMICOLON},
-		{Literal: "i", Type: IDENT},
-		{Literal: "=", Type: ASSIGN},
-		{Literal: "i", Type: IDENT},
-		{Literal: "+", Type: BIN_PLUS},
-		{Literal: "1", Type: INT},
-		{Literal: ")", Type: CLOSE_PARAN},
-		{Literal: "{", Type: OPEN_CURLY},
-		{Literal: "}", Type: CLOSE_CURLY},
+		{Literal: ";", Type: SEMICOLON, Line: 3},
+		{Literal: "i", Type: IDENT, Line: 3},
+		{Literal: "=", Type: ASSIGN, Line: 3},
+		{Literal: "i", Type: IDENT, Line: 3},
+		{Literal: "+", Type: BIN_PLUS, Line: 3},
+		{Literal: "1", Type: INT, Line: 3},
+		{Literal: ")", Type: CLOSE_PARAN, Line: 3},
+		{Literal: "{", Type: OPEN_CURLY, Line: 3},
+		{Literal: "}", Type: CLOSE_CURLY, Line: 3},
 
-		{Literal: "let", Type: LET},
-		{Literal: "a", Type: IDENT},
-		{Literal: ":", Type: COLON},
-		{Literal: "int", Type: TYPE_INT},
-		{Literal: "=", Type: ASSIGN},
-		{Literal: "1", Type: INT},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "let", Type: LET, Line: 4},
+		{Literal: "a", Type: IDENT, Line: 4},
+		{Literal: ":", Type: COLON, Line: 4},
+		{Literal: "int", Type: TYPE_INT, Line: 4},
+		{Literal: "=", Type: ASSIGN, Line: 4},
+		{Literal: "1", Type: INT, Line: 4},
+		{Literal: ";", Type: SEMICOLON, Line: 4},
 
-		{Literal: "a", Type: IDENT},
-		{Literal: "/", Type: BIN_DIVIDE},
-		{Literal: "2", Type: INT},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "a", Type: IDENT, Line: 5},
+		{Literal: "/", Type: BIN_DIVIDE, Line: 5},
+		{Literal: "2", Type: INT, Line: 5},
+		{Literal: ";", Type: SEMICOLON, Line: 5},
 
-		{Literal: "a", Type: IDENT},
-		{Literal: "=", Type: ASSIGN},
-		{Literal: "a", Type: IDENT},
-		{Literal: "+", Type: BIN_PLUS},
-		{Literal: "1", Type: INT},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "a", Type: IDENT, Line: 6},
+		{Literal: "=", Type: ASSIGN, Line: 6},
+		{Literal: "a", Type: IDENT, Line: 6},
+		{Literal: "+", Type: BIN_PLUS, Line: 6},
+		{Literal: "1", Type: INT, Line: 6},
+		{Literal: ";", Type: SEMICOLON, Line: 6},
 
-		{Literal: "true", Type: BOOL_TRUE},
-		{Literal: "==", Type: BIN_EQUAL},
-		{Literal: "false", Type: BOOL_FALSE},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "true", Type: BOOL_TRUE, Line: 7},
+		{Literal: "==", Type: BIN_EQUAL, Line: 7},
+		{Literal: "false", Type: BOOL_FALSE, Line: 7},
+		{Literal: ";", Type: SEMICOLON, Line: 7},
 
-		{Literal: "a", Type: IDENT},
-		{Literal: ">=", Type: BIN_GREATER_THAN_EQUAL},
-		{Literal: "5", Type: INT},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "a", Type: IDENT, Line: 8},
+		{Literal: ">=", Type: BIN_GREATER_THAN_EQUAL, Line: 8},
+		{Literal: "5", Type: INT, Line: 8},
+		{Literal: ";", Type: SEMICOLON, Line: 8},
 
-		{Literal: "print", Type: IDENT},
-		{Literal: "(", Type: OPEN_PARAN},
-		{Literal: "1", Type: INT},
-		{Literal: "+", Type: BIN_PLUS},
-		{Literal: "1", Type: INT},
-		{Literal: ")", Type: CLOSE_PARAN},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "print", Type: IDENT, Line: 9},
+		{Literal: "(", Type: OPEN_PARAN, Line: 9},
+		{Literal: "1", Type: INT, Line: 9},
+		{Literal: "+", Type: BIN_PLUS, Line: 9},
+		{Literal: "1", Type: INT, Line: 9},
+		{Literal: ")", Type: CLOSE_PARAN, Line: 9},
+		{Literal: ";", Type: SEMICOLON, Line: 9},
 
-		{Literal: "print", Type: IDENT},
-		{Literal: "(", Type: OPEN_PARAN},
-		{Literal: "Hello World!", Type: STR},
-		{Literal: ")", Type: CLOSE_PARAN},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "print", Type: IDENT, Line: 10},
+		{Literal: "(", Type: OPEN_PARAN, Line: 10},
+		{Literal: "Hello World!", Type: STR, Line: 10},
+		{Literal: ")", Type: CLOSE_PARAN, Line: 10},
+		{Literal: ";", Type: SEMICOLON, Line: 10},
 
-		{Literal: "let", Type: LET},
-		{Literal: "str", Type: IDENT},
-		{Literal: ":", Type: COLON},
-		{Literal: "string", Type: TYPE_STR},
-		{Literal: "=", Type: ASSIGN},
-		{Literal: "something", Type: STR},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "let", Type: LET, Line: 11},
+		{Literal: "str", Type: IDENT, Line: 11},
+		{Literal: ":", Type: COLON, Line: 11},
+		{Literal: "string", Type: TYPE_STR, Line: 11},
+		{Literal: "=", Type: ASSIGN, Line: 11},
+		{Literal: "something", Type: STR, Line: 11},
+		{Literal: ";", Type: SEMICOLON, Line: 11},
 
-		{Literal: "return", Type: RETURN},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "return", Type: RETURN, Line: 12},
+		{Literal: ";", Type: SEMICOLON, Line: 12},
 
-		{Literal: "return", Type: RETURN},
-		{Literal: "1", Type: INT},
-		{Literal: "%", Type: BIN_MODULO},
-		{Literal: "2", Type: INT},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "return", Type: RETURN, Line: 13},
+		{Literal: "1", Type: INT, Line: 13},
+		{Literal: "%", Type: BIN_MODULO, Line: 13},
+		{Literal: "2", Type: INT, Line: 13},
+		{Literal: ";", Type: SEMICOLON, Line: 13},
 
-		{Literal: "str", Type: IDENT},
-		{Literal: "[", Type: OPEN_SQUARE},
-		{Literal: "0", Type: INT},
-		{Literal: "]", Type: CLOSE_SQUARE},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "str", Type: IDENT, Line: 14},
+		{Literal: "[", Type: OPEN_SQUARE, Line: 14},
+		{Literal: "0", Type: INT, Line: 14},
+		{Literal: "]", Type: CLOSE_SQUARE, Line: 14},
+		{Literal: ";", Type: SEMICOLON, Line: 14},
 
-		{Literal: "}", Type: CLOSE_CURLY},
+		// Comment line supposed to be here, ignored by lexer but still is a line in the file, therefore Line_no 15 is skipped
 
-		{Literal: "-", Type: BIN_MINUS},
-		{Literal: "*", Type: BIN_ASTERIC},
-		{Literal: "/", Type: BIN_DIVIDE},
-		{Literal: "%", Type: BIN_MODULO},
-		{Literal: ";", Type: SEMICOLON},
+		{Literal: "}", Type: CLOSE_CURLY, Line: 16},
 
-		{Literal: "", Type: EOF},
+		{Literal: "-", Type: BIN_MINUS, Line: 17},
+		{Literal: "*", Type: BIN_ASTERIC, Line: 17},
+		{Literal: "/", Type: BIN_DIVIDE, Line: 17},
+		{Literal: "%", Type: BIN_MODULO, Line: 17},
+		{Literal: ";", Type: SEMICOLON, Line: 17},
+
+		{Literal: "", Type: EOF, Line: 18}, // eof is in a new line, for whatever reason, no matter to us
 	}
 
 	test_tokens(t, input, toks)
@@ -180,5 +183,10 @@ func test_tokens(t *testing.T, input string, toks []Token) {
 		if aTok.Type != eTok.Type {
 			t.Fatalf("expected Token Type [%s], got [%s]", eTok.Type.String(), aTok.Type.String())
 		}
+
+		if eTok.Line != 0 && eTok.Line != aTok.Line {
+			t.Fatalf("expected Line Number [%d], got [%d]", eTok.Line, aTok.Line)
+		}
+
 	}
 }
