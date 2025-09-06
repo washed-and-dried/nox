@@ -12,32 +12,32 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.ch {
 	case '(':
-		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_PARAN, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_PARAN, Pos: l.pos, Line: l.line_no}
 	case ')':
-		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_PARAN, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_PARAN, Pos: l.pos, Line: l.line_no}
 	case '{':
-		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_CURLY, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_CURLY, Pos: l.pos, Line: l.line_no}
 	case '}':
-		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_CURLY, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_CURLY, Pos: l.pos, Line: l.line_no}
 	case '[':
-		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_SQUARE, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_SQUARE, Pos: l.pos, Line: l.line_no}
 	case ']':
-		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_SQUARE, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_SQUARE, Pos: l.pos, Line: l.line_no}
 	case '=':
 		{
 			if c, _ := l.peek_next_char(); c == '=' {
-				tok = token.Token{Literal: string("=="), Type: token.BIN_EQUAL, Pos: l.pos}
+				tok = token.Token{Literal: string("=="), Type: token.BIN_EQUAL, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.ASSIGN, Pos: l.pos}
+				tok = token.Token{Literal: string(l.ch), Type: token.ASSIGN, Pos: l.pos, Line: l.line_no}
 			}
 		}
 	case ';':
-		tok = token.Token{Literal: string(l.ch), Type: token.SEMICOLON, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.SEMICOLON, Pos: l.pos, Line: l.line_no}
 	case ':':
-		tok = token.Token{Literal: string(l.ch), Type: token.COLON, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.COLON, Pos: l.pos, Line: l.line_no}
 	case NULL_CHAR:
-		tok = token.Token{Literal: "", Type: token.EOF, Pos: l.pos}
+		tok = token.Token{Literal: "", Type: token.EOF, Pos: l.pos, Line: l.line_no}
 
 	case '"', '`', '\'':
 		tok = l.read_string()
@@ -45,71 +45,71 @@ func (l *Lexer) NextToken() token.Token {
 	case '+':
 		{
 			// TODO: handle prefix ++ in here
-			tok = token.Token{Literal: string(l.ch), Type: token.BIN_PLUS, Pos: l.pos}
+			tok = token.Token{Literal: string(l.ch), Type: token.BIN_PLUS, Pos: l.pos, Line: l.line_no}
 		}
 	case '-':
-		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MINUS, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MINUS, Pos: l.pos, Line: l.line_no}
 	case '*':
-		tok = token.Token{Literal: string(l.ch), Type: token.BIN_ASTERIC, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.BIN_ASTERIC, Pos: l.pos, Line: l.line_no}
 	case '/':
 		{
 			if c, _ := l.peek_next_char(); c == '/' {
 				l.skip_comment()
 				return l.NextToken()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_DIVIDE, Pos: l.pos}
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_DIVIDE, Pos: l.pos, Line: l.line_no}
 			}
 		}
 	case '%':
-		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MODULO, Pos: l.pos}
+		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MODULO, Pos: l.pos, Line: l.line_no}
 
 	case '<':
 		{
 			if c, _ := l.peek_next_char(); c == '=' {
-				tok = token.Token{Literal: string("<="), Type: token.BIN_LESS_THAN_EQUAL, Pos: l.pos}
+				tok = token.Token{Literal: string("<="), Type: token.BIN_LESS_THAN_EQUAL, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_LESS_THAN, Pos: l.pos}
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_LESS_THAN, Pos: l.pos, Line: l.line_no}
 			}
 		}
 
 	case '>':
 		{
 			if c, _ := l.peek_next_char(); c == '=' {
-				tok = token.Token{Literal: string(">="), Type: token.BIN_GREATER_THAN_EQUAL, Pos: l.pos}
+				tok = token.Token{Literal: string(">="), Type: token.BIN_GREATER_THAN_EQUAL, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_GREATER_THAN, Pos: l.pos}
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_GREATER_THAN, Pos: l.pos, Line: l.line_no}
 			}
 		}
 
 	case '&':
 		{
 			if c, _ := l.peek_next_char(); c == '&' {
-				tok = token.Token{Literal: string("&&"), Type: token.BIN_AND, Pos: l.pos}
+				tok = token.Token{Literal: string("&&"), Type: token.BIN_AND, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_BITWISE_AND, Pos: l.pos}
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_BITWISE_AND, Pos: l.pos, Line: l.line_no}
 			}
 		}
 
 	case '|':
 		{
 			if c, _ := l.peek_next_char(); c == '|' {
-				tok = token.Token{Literal: string("||"), Type: token.BIN_OR, Pos: l.pos}
+				tok = token.Token{Literal: string("||"), Type: token.BIN_OR, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_BITWISE_OR, Pos: l.pos}
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_BITWISE_OR, Pos: l.pos, Line: l.line_no}
 			}
 		}
 
 	case '!':
 		{
 			if c, _ := l.peek_next_char(); c == '=' {
-				tok = token.Token{Literal: string("!="), Type: token.BIN_NOT_EQUAL, Pos: l.pos}
+				tok = token.Token{Literal: string("!="), Type: token.BIN_NOT_EQUAL, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_NOT, Pos: l.pos}
+				tok = token.Token{Literal: string(l.ch), Type: token.BIN_NOT, Pos: l.pos, Line: l.line_no}
 			}
 		}
 
@@ -159,7 +159,7 @@ func (l *Lexer) read_string() token.Token {
 		}
 	}
 
-	return token.Token{Literal: lit, Type: token.STR, Pos: pos}
+	return token.Token{Literal: lit, Type: token.STR, Pos: pos, Line: l.line_no}
 }
 
 func (l *Lexer) read_number() token.Token {
@@ -171,7 +171,7 @@ func (l *Lexer) read_number() token.Token {
 		l.read_char()
 	}
 
-	return token.Token{Literal: lit, Type: token.INT, Pos: pos}
+	return token.Token{Literal: lit, Type: token.INT, Pos: pos, Line: l.line_no}
 }
 
 func (l *Lexer) read_ident_or_keyword() token.Token {
@@ -184,9 +184,9 @@ func (l *Lexer) read_ident_or_keyword() token.Token {
 	}
 
 	if tokType, ok := token.IsKeyword(lit); ok {
-		return token.Token{Literal: lit, Type: tokType, Pos: pos}
+		return token.Token{Literal: lit, Type: tokType, Pos: pos, Line: l.line_no}
 	} else {
-		return token.Token{Literal: lit, Type: token.IDENT, Pos: pos}
+		return token.Token{Literal: lit, Type: token.IDENT, Pos: pos, Line: l.line_no}
 	}
 }
 

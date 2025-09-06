@@ -4,6 +4,7 @@ type Token struct {
 	Literal string
 	Type    TokenType
 	Pos     int
+	Line	int
 }
 
 type TokenType int
