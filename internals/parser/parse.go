@@ -46,9 +46,13 @@ func (p *Parser) Parse_program() *Program {
 		// }
 	}
 
-	return &Program{
+	program := &Program{
 		Stmts: stmts,
 	}
+
+	p.append_main_call(program)
+
+	return program
 }
 
 func (p *Parser) parse_statement() Statement {
@@ -229,4 +233,20 @@ func (p *Parser) expect_token_type(tokType token.TokenType) token.Token {
 
 func (p *Parser) expect_peek(tokType token.TokenType) bool { // returns if peek = expected tok, does not consume the current one
 	return p.peekTok.Type == tokType
+}
+
+func (p *Parser) append_main_call(program *Program) {
+	main_call := ExpressionStmt{
+		Value: ExprValue{
+			AsFuncCall: FuncCallExpr{
+				Ident: Identifier{
+					Name: "main",
+				},
+				Args: []ExpressionStmt{},
+			},
+		},
+		Type: EXPR_TYPE_FUNC,
+	}
+
+	program.Stmts = append(program.Stmts, main_call)
 }
