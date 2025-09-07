@@ -12,30 +12,30 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.ch {
 	case '(':
-		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_PARAN, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.OPEN_PARAN)
 	case ')':
-		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_PARAN, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.CLOSE_PARAN)
 	case '{':
-		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_CURLY, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.OPEN_CURLY)
 	case '}':
-		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_CURLY, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.CLOSE_CURLY)
 	case '[':
-		tok = token.Token{Literal: string(l.ch), Type: token.OPEN_SQUARE, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.OPEN_SQUARE)
 	case ']':
-		tok = token.Token{Literal: string(l.ch), Type: token.CLOSE_SQUARE, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.CLOSE_SQUARE)
 	case '=':
 		{
 			if c, _ := l.peek_next_char(); c == '=' {
 				tok = token.Token{Literal: string("=="), Type: token.BIN_EQUAL, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.ASSIGN, Pos: l.pos, Line: l.line_no}
+				tok = l.token_for(token.ASSIGN)
 			}
 		}
 	case ';':
-		tok = token.Token{Literal: string(l.ch), Type: token.SEMICOLON, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.SEMICOLON)
 	case ':':
-		tok = token.Token{Literal: string(l.ch), Type: token.COLON, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.COLON)
 	case NULL_CHAR:
 		tok = token.Token{Literal: "", Type: token.EOF, Pos: l.pos, Line: l.line_no}
 
@@ -45,23 +45,23 @@ func (l *Lexer) NextToken() token.Token {
 	case '+':
 		{
 			// TODO: handle prefix ++ in here
-			tok = token.Token{Literal: string(l.ch), Type: token.BIN_PLUS, Pos: l.pos, Line: l.line_no}
+			tok = l.token_for(token.BIN_PLUS)
 		}
 	case '-':
-		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MINUS, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.BIN_MINUS)
 	case '*':
-		tok = token.Token{Literal: string(l.ch), Type: token.BIN_ASTERIC, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.BIN_ASTERIC)
 	case '/':
 		{
 			if c, _ := l.peek_next_char(); c == '/' {
 				l.skip_comment()
 				return l.NextToken()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_DIVIDE, Pos: l.pos, Line: l.line_no}
+				tok = l.token_for(token.BIN_DIVIDE)
 			}
 		}
 	case '%':
-		tok = token.Token{Literal: string(l.ch), Type: token.BIN_MODULO, Pos: l.pos, Line: l.line_no}
+		tok = l.token_for(token.BIN_MODULO)
 
 	case '<':
 		{
@@ -69,7 +69,7 @@ func (l *Lexer) NextToken() token.Token {
 				tok = token.Token{Literal: string("<="), Type: token.BIN_LESS_THAN_EQUAL, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_LESS_THAN, Pos: l.pos, Line: l.line_no}
+				tok = l.token_for(token.BIN_LESS_THAN)
 			}
 		}
 
@@ -79,7 +79,7 @@ func (l *Lexer) NextToken() token.Token {
 				tok = token.Token{Literal: string(">="), Type: token.BIN_GREATER_THAN_EQUAL, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_GREATER_THAN, Pos: l.pos, Line: l.line_no}
+				tok = l.token_for(token.BIN_GREATER_THAN)
 			}
 		}
 
@@ -89,7 +89,7 @@ func (l *Lexer) NextToken() token.Token {
 				tok = token.Token{Literal: string("&&"), Type: token.BIN_AND, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_BITWISE_AND, Pos: l.pos, Line: l.line_no}
+				tok = l.token_for(token.BIN_BITWISE_AND)
 			}
 		}
 
@@ -99,7 +99,7 @@ func (l *Lexer) NextToken() token.Token {
 				tok = token.Token{Literal: string("||"), Type: token.BIN_OR, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_BITWISE_OR, Pos: l.pos, Line: l.line_no}
+				tok = l.token_for(token.BIN_BITWISE_OR)
 			}
 		}
 
@@ -109,7 +109,7 @@ func (l *Lexer) NextToken() token.Token {
 				tok = token.Token{Literal: string("!="), Type: token.BIN_NOT_EQUAL, Pos: l.pos, Line: l.line_no}
 				l.read_char()
 			} else {
-				tok = token.Token{Literal: string(l.ch), Type: token.BIN_NOT, Pos: l.pos, Line: l.line_no}
+				tok = l.token_for(token.BIN_NOT)
 			}
 		}
 
@@ -152,7 +152,7 @@ func (l *Lexer) read_string() token.Token {
 			default:
 				lit += string(l.ch)
 			}
-		}else if len(lit) >= MAX_STRING_SIZE {
+		} else if len(lit) >= MAX_STRING_SIZE {
 			panic("len(str) > 256 or string wasn't closed | bro really thought this was javascript")
 		} else {
 			lit += string(l.ch)
@@ -204,4 +204,8 @@ func (l *Lexer) skip_comment() {
 		l.read_char()
 	}
 	l.read_char()
+}
+
+func (l *Lexer) token_for(Type token.TokenType) token.Token {
+	return token.Token{Literal: string(l.ch), Type: Type, Pos: l.pos, Line: l.line_no}
 }

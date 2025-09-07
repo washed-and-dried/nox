@@ -13,5 +13,3 @@ fn main(){
     print(b);
     return;
 }
-
-main();
