@@ -2,6 +2,7 @@ package eval
 
 import (
 	"fmt"
+
 	"nox/internals/parser"
 	"nox/internals/token"
 )
@@ -71,13 +72,17 @@ func eval_ast(stmt parser.Statement, ctx *EvalContext) EvalObj {
 		{
 			return eval_block_stmts(st, ctx)
 		}
-	case parser.ForStmt:
+	case parser.LoopStmt:
 		{
-			return eval_for_stmt(st, ctx.CreateNewEnclosedCtx())
+			return eval_loop_stmt(st, ctx.CreateNewEnclosedCtx())
 		}
 	case parser.IfStmt:
 		{
 			return eval_if_stmt(st, ctx.CreateNewEnclosedCtx())
+		}
+	case parser.NullStmt:
+		{
+			return EVAL_NULL_OBJ
 		}
 	default:
 		panic("Unhandled ast type: " + stmt.String())
@@ -149,20 +154,20 @@ func eval_expr(expr parser.ExpressionStmt, ctx *EvalContext) EvalObj {
 			sbs_expr := expr.Value.AsSubscript
 
 			ident := eval_ast(sbs_expr.Ident, ctx)
-            index := eval_ast(*sbs_expr.Index, ctx)
+			index := eval_ast(*sbs_expr.Index, ctx)
 
-            // FIXME: for now we will just return an StrObj because I am too lazy to implement print and equals for CharObj
+			// FIXME: for now we will just return an StrObj because I am too lazy to implement print and equals for CharObj
 
-            if ident.Type() != EVAL_STR && index.Type() != EVAL_INT {
-                return EVAL_ERROR_OBJ
-            }
+			if ident.Type() != EVAL_STR && index.Type() != EVAL_INT {
+				return EVAL_ERROR_OBJ
+			}
 
-            strObj, _ := ident.(StrObj)
-            intObj, _ := index.(IntObj)
+			strObj, _ := ident.(StrObj)
+			intObj, _ := index.(IntObj)
 
-            return StrObj{
-                Value: string(strObj.Value[intObj.Value]),
-            }
+			return StrObj{
+				Value: string(strObj.Value[intObj.Value]),
+			}
 		}
 	default:
 		{
@@ -207,7 +212,7 @@ func unwrapReturnValue(obj EvalObj) EvalObj {
 	return obj
 }
 
-func eval_for_stmt(stmt parser.ForStmt, ctx *EvalContext) EvalObj {
+func eval_loop_stmt(stmt parser.LoopStmt, ctx *EvalContext) EvalObj {
 	eval_ast(stmt.Init, ctx) // introduce the loop variable into the context
 
 	for ifBoolTrue(eval_ast(stmt.Cond, ctx)) {
@@ -280,10 +285,10 @@ func extendFunctionEnv(fn FuncDefObj, args *[]EvalObj, ctx *EvalContext) *EvalCo
 }
 
 func eval_bin_expr(bin_expr parser.BinaryExpr, ctx *EvalContext) EvalObj {
-    if bin_expr.Left == nil || bin_expr.Right == nil {
-        fmt.Println("Left or right BinaryExpr was nil")
-        return EVAL_NULL_OBJ
-    }
+	if bin_expr.Left == nil || bin_expr.Right == nil {
+		fmt.Println("Left or right BinaryExpr was nil")
+		return EVAL_NULL_OBJ
+	}
 
 	left := eval_ast(*bin_expr.Left, ctx) // NOTE: we would have to dereference both left and right since they are pointers due to recursive types
 	right := eval_ast(*bin_expr.Right, ctx)
@@ -362,15 +367,16 @@ func perform_bin_operation_bool(left EvalObj, right EvalObj, operator token.Toke
 		Value: res,
 	}
 }
+
 func perform_bin_operation_str(left EvalObj, right EvalObj, operator token.Token) EvalObj {
-    var res bool
+	var res bool
 	lval := left.(StrObj).Value
 	rval := right.(StrObj).Value
 
 	switch operator.Type {
 	case token.BIN_EQUAL:
 		res = lval == rval
-    case token.BIN_NOT_EQUAL:
+	case token.BIN_NOT_EQUAL:
 		res = lval != rval
 	default:
 		panic("Unhandled operator: " + operator.Type.String())

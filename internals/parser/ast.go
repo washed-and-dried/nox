@@ -148,15 +148,21 @@ func (v VarUpdation) String() string {
 	return fmt.Sprintf("VarUpdation: [%s] = [%s]", v.Var, v.Value)
 }
 
-type ForStmt struct {
+type LoopStmt struct {
 	Init     Statement // we are putting Statement since it  could be an empty statement like for(;;){...}
 	Cond     Statement
 	Updation Statement
 	Body     BodyStatement
 }
 
-func (f ForStmt) String() string {
-	return fmt.Sprintf("ForStmt")
+func (f LoopStmt) String() string {
+	return fmt.Sprintf("LoopStmt")
+}
+
+type NullStmt struct {}
+
+func (f NullStmt) String() string {
+	return fmt.Sprintf("NullStmt")
 }
 
 type IfStmt struct {

@@ -19,6 +19,7 @@ const (
     RETURN
     LET
     FOR
+	WHILE
     IF
     ELSE
 
@@ -127,6 +128,7 @@ func IsKeyword(lit string) (TokenType, bool) {
     switch lit {
     case "let": return LET, true
     case "for": return FOR, true
+	case "while": return WHILE, true
     case "if": return IF, true
     case "else": return ELSE, true
     case "int": return TYPE_INT, true

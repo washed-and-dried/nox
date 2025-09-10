@@ -2,6 +2,8 @@ package parser
 
 import (
 	"bufio"
+	"fmt"
+
 	"nox/internals/lexer"
 	"nox/internals/token"
 )
@@ -120,6 +122,8 @@ func (p *Parser) parse_statement() Statement {
 		}
 	case token.FOR:
 		return p.parse_for_stmt()
+	case token.WHILE:
+		return p.parse_while_stmt()
 	case token.IF:
 		return p.parse_if_stmt(true)
 	default:
@@ -160,27 +164,54 @@ func (p *Parser) parse_body() BodyStatement {
 	}
 }
 
-func (p *Parser) parse_for_stmt() ForStmt {
+func (p *Parser) parse_for_stmt() LoopStmt {
 	p.expect_token_type(token.FOR)        // for
 	p.expect_token_type(token.OPEN_PARAN) // (
 
-	// FIXME: check for for statements such as: for(i; ;)
-	init := p.parse_statement() // let i: int = 10;
+	var init Statement = NullStmt{}
+	if p.tok.Type == token.SEMICOLON { // FIXME: This is returning false when it shouldn't
+		p.expect_token_type(token.SEMICOLON)
+	} else {
+		fmt.Println("HERE")
+		init = p.parse_statement() // let i: int = 10;
+	}
 
-	cond := p.parse_expr()
+	cond := p.parse_expr() // FIXME: Condition could also potentially be empty, address later
 	p.expect_token_type(token.SEMICOLON) // semicolon after expression: i < 10;
 
-	updation := p.parse_statement() // i = i + 1
+	var updation Statement = NullStmt{}
+	if p.tok.Type != token.CLOSE_PARAN {
+		updation = p.parse_statement() // i = i + 1
+	}
 
 	p.expect_token_type(token.CLOSE_PARAN) // )
 
 	body := p.parse_body() // {...body...}
 
-	return ForStmt{
+	return LoopStmt{
 		Init:     init,
 		Cond:     cond,
 		Updation: updation,
 		Body:     body,
+	}
+}
+
+func (p *Parser) parse_while_stmt() LoopStmt {
+	p.expect_token_type(token.WHILE)      // while
+	p.expect_token_type(token.OPEN_PARAN) // (
+
+	cond := p.parse_expr()
+	p.expect_token_type(token.SEMICOLON) // semicolon after expression: i < 10;
+
+	p.expect_token_type(token.CLOSE_PARAN) // )
+
+	body := p.parse_body() // {...body...}
+
+	return LoopStmt{
+		Init:     NullStmt{},
+		Cond:     cond,
+		Body:     body,
+		Updation: NullStmt{},
 	}
 }
 
