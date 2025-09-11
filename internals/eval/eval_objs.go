@@ -75,6 +75,28 @@ var builtins = map[string]BuiltinFuncObj{
 			return EVAL_NULL_OBJ
 		},
 	},
+	"println": {
+		fn: func(args ...EvalObj) EvalObj {
+			if len(args) < 1 {
+				return EVAL_ERROR_OBJ
+			}
+
+			for _, arg := range args {
+				switch obj := arg.(type) {
+				case IntObj:
+					fmt.Println(obj.Value)
+				case StrObj:
+					fmt.Println(obj.Value)
+                case BoolObj:
+                    fmt.Println(obj.Value)
+				default:
+					fmt.Printf("%T: %s\n", obj, obj)
+				}
+			}
+
+			return EVAL_NULL_OBJ
+		},
+	},
     "len": {
         fn: func(args ...EvalObj) EvalObj {
             if len(args) != 1 {

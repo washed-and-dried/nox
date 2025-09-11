@@ -1,0 +1,8 @@
+fn main(){
+    let b: int = 1;
+
+    println(b);
+    print(b);
+    println(b);
+    println(b);
+}
