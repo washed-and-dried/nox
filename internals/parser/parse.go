@@ -111,6 +111,15 @@ func (p *Parser) parse_statement() Statement {
 			p.expect_token_type(token.COLON)
 			tok := p.tok
 			p.next_token()
+			if p.tok.Type == token.SEMICOLON {
+				p.expect_token_type(token.SEMICOLON)
+				fmt.Println(tok.Literal)
+				return AssignStmt {
+					Type: tok,
+					Value: p.prep_default_val(tok.Type),
+					Ident: ident,
+				}
+			}
 			p.expect_token_type(token.ASSIGN)
 			expr := p.parse_expr()
 			p.expect_token_type(token.SEMICOLON)

@@ -1,8 +1,10 @@
 package parser
 
 import (
-	"nox/internals/token"
+	"fmt"
 	"strconv"
+
+	"nox/internals/token"
 )
 
 // this file will contain the expression parser. The meats and potatoes that will be used basically everywhere.
@@ -10,23 +12,23 @@ import (
 type ExprType string
 
 const (
-	EXPR_TYPE_FUNC = "func_call"
-	EXPR_TYPE_BIN  = "bin_op"
-	EXPR_TYPE_INT  = "int"
-	EXPR_TYPE_STR  = "str"
-	EXPR_TYPE_VAR  = "var"
-	EXPR_TYPE_BOOL = "bool"
+	EXPR_TYPE_FUNC      = "func_call"
+	EXPR_TYPE_BIN       = "bin_op"
+	EXPR_TYPE_INT       = "int"
+	EXPR_TYPE_STR       = "str"
+	EXPR_TYPE_VAR       = "var"
+	EXPR_TYPE_BOOL      = "bool"
 	EXPR_TYPE_SUBSCRIPT = "subscript"
 )
 
 type ExprValue struct {
-	AsStr      StrExpr
-	AsVar      Identifier
-	AsFuncCall FuncCallExpr
-	AsBinOp    BinaryExpr
-	AsInt      IntExpr
-	AsBool     BoolExpr
-    AsSubscript SubscriptExpr
+	AsStr       StrExpr
+	AsVar       Identifier
+	AsFuncCall  FuncCallExpr
+	AsBinOp     BinaryExpr
+	AsInt       IntExpr
+	AsBool      BoolExpr
+	AsSubscript SubscriptExpr
 }
 
 func (p *Parser) parse_expr() ExpressionStmt {
@@ -101,7 +103,7 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 			if p.tok.Type == token.BOOL_FALSE {
 				value = false
 			}
-            p.next_token()
+			p.next_token()
 
 			return ExpressionStmt{
 				Type: EXPR_TYPE_BOOL,
@@ -116,7 +118,7 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 		{
 			if p.expect_peek(token.OPEN_PARAN) { // function calls
 				return p.parse_func_calls()
-            } else if p.expect_peek(token.OPEN_SQUARE) { // subscript str[0] //FIXME: Make this into a statement since we can have mutability str[0] = 'b'
+			} else if p.expect_peek(token.OPEN_SQUARE) { // subscript str[0] //FIXME: Make this into a statement since we can have mutability str[0] = 'b'
 				return p.parse_subscript()
 			} else {
 				return ExpressionStmt{
@@ -142,6 +144,41 @@ func (p *Parser) parse_primary_exprs() ExpressionStmt {
 		}
 	default: // FIXME: add guard with all non-primary tokens rather than panic
 		panic("Not an primary expression: " + p.tok.Type.String())
+	}
+}
+
+func (p *Parser) prep_default_val(t token.TokenType) ExpressionStmt {
+	switch t {
+	case token.TYPE_INT:
+		{
+			var value int64
+
+			return ExpressionStmt{
+				Type: EXPR_TYPE_INT,
+				Value: ExprValue{
+					AsInt: IntExpr{
+						Value: value,
+					},
+				},
+			}
+		}
+	case token.TYPE_STR:
+		{
+			var value string
+
+			return ExpressionStmt{
+				Type: EXPR_TYPE_STR,
+				Value: ExprValue{
+					AsStr: StrExpr{
+						Value: value,
+					},
+				},
+			}
+		}
+	default:
+		{
+			panic("Invalid Type: " + t.String() + " in line: " + fmt.Sprint(p.tok.Line-1))
+		}
 	}
 }
 
@@ -172,16 +209,16 @@ func (p *Parser) parse_subscript() ExpressionStmt {
 	name := p.expect_token_type(token.IDENT).Literal
 
 	p.expect_token_type(token.OPEN_SQUARE)
-    index := p.parse_expr()
+	index := p.parse_expr()
 	p.expect_token_type(token.CLOSE_SQUARE)
 
 	return ExpressionStmt{
 		Type: EXPR_TYPE_SUBSCRIPT,
 		Value: ExprValue{
-            AsSubscript: SubscriptExpr{
-                Ident: Identifier{Name: name},
-                Index: &index,
-            },
+			AsSubscript: SubscriptExpr{
+				Ident: Identifier{Name: name},
+				Index: &index,
+			},
 		},
 	}
 }
@@ -190,11 +227,11 @@ const MAX_PRECEDENCE = 3
 
 func (p *Parser) get_op_precedence(tokType token.TokenType) int {
 	switch tokType {
-    case token.BIN_AND, token.BIN_OR, token.BIN_NOT:
+	case token.BIN_AND, token.BIN_OR, token.BIN_NOT:
 		return 0
 	case token.BIN_GREATER_THAN_EQUAL, token.BIN_LESS_THAN_EQUAL,
 		token.BIN_LESS_THAN, token.BIN_GREATER_THAN,
-        token.BIN_EQUAL, token.BIN_NOT_EQUAL:
+		token.BIN_EQUAL, token.BIN_NOT_EQUAL:
 		return 1
 	case token.BIN_PLUS, token.BIN_MINUS:
 		return 2
