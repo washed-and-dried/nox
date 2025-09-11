@@ -12,7 +12,7 @@ const (
 	EVAL_BUILINT_FUNC = "builtin_func"
 	EVAL_INT          = "int"
 	EVAL_STR          = "string"
-	EVAL_BOOL          = "bool"
+	EVAL_BOOL         = "bool"
 	EVAL_NULL         = "null"
 	EVAL_ERROR        = "error"
 	EVAL_RETURN       = "return"
@@ -65,8 +65,8 @@ var builtins = map[string]BuiltinFuncObj{
 					fmt.Print(obj.Value)
 				case StrObj:
 					fmt.Print(obj.Value)
-                case BoolObj:
-                    fmt.Print(obj.Value)
+				case BoolObj:
+					fmt.Print(obj.Value)
 				default:
 					fmt.Printf("%T: %s\n", obj, obj)
 				}
@@ -87,8 +87,8 @@ var builtins = map[string]BuiltinFuncObj{
 					fmt.Println(obj.Value)
 				case StrObj:
 					fmt.Println(obj.Value)
-                case BoolObj:
-                    fmt.Println(obj.Value)
+				case BoolObj:
+					fmt.Println(obj.Value)
 				default:
 					fmt.Printf("%T: %s\n", obj, obj)
 				}
@@ -97,21 +97,21 @@ var builtins = map[string]BuiltinFuncObj{
 			return EVAL_NULL_OBJ
 		},
 	},
-    "len": {
-        fn: func(args ...EvalObj) EvalObj {
-            if len(args) != 1 {
-                return EVAL_ERROR_OBJ
-            }
-            strObj, ok := args[0].(StrObj)
-            if !ok {
-                return EVAL_ERROR_OBJ
-            }
+	"len": {
+		fn: func(args ...EvalObj) EvalObj {
+			if len(args) != 1 {
+				return EVAL_ERROR_OBJ
+			}
+			strObj, ok := args[0].(StrObj)
+			if !ok {
+				return EVAL_ERROR_OBJ
+			}
 
-            return IntObj{
-                Value: len(strObj.Value),
-            }
-        },
-    },
+			return IntObj{
+				Value: len(strObj.Value),
+			}
+		},
+	},
 }
 
 type IntObj struct {
@@ -157,8 +157,8 @@ func (e *EvalContext) Get(key string) EvalObj {
 
 	if !ok {
 		if e.outer == nil {
-            // return EVAL_ERROR_OBJ // FIXME: shouldn't panic but WHY NOT PANIC MFs
-            panic("No such identifier in the context: " + key)
+			// return EVAL_ERROR_OBJ // FIXME: shouldn't panic but WHY NOT PANIC MFs
+			panic("No such identifier in the context: " + key)
 		} else {
 			return e.outer.Get(key)
 		}

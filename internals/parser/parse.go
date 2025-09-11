@@ -114,8 +114,8 @@ func (p *Parser) parse_statement() Statement {
 			if p.tok.Type == token.SEMICOLON {
 				p.expect_token_type(token.SEMICOLON)
 				fmt.Println(tok.Literal)
-				return AssignStmt {
-					Type: tok,
+				return AssignStmt{
+					Type:  tok,
 					Value: p.prep_default_val(tok.Type),
 					Ident: ident,
 				}
@@ -185,7 +185,7 @@ func (p *Parser) parse_for_stmt() LoopStmt {
 		init = p.parse_statement() // let i: int = 10;
 	}
 
-	cond := p.parse_expr() // FIXME: Condition could also potentially be empty, address later
+	cond := p.parse_expr()               // FIXME: Condition could also potentially be empty, address later
 	p.expect_token_type(token.SEMICOLON) // semicolon after expression: i < 10;
 
 	var updation Statement = NullStmt{}
@@ -210,7 +210,6 @@ func (p *Parser) parse_while_stmt() LoopStmt {
 	p.expect_token_type(token.OPEN_PARAN) // (
 
 	cond := p.parse_expr()
-	p.expect_token_type(token.SEMICOLON) // semicolon after expression: i < 10;
 
 	p.expect_token_type(token.CLOSE_PARAN) // )
 

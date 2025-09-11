@@ -4,15 +4,12 @@ fn main(){
     let i: int;
 
     for (; i < 4; i = i + 1){
-        print(i);
-        print("\n");
-        print("\n");
+        println(i);
     }
 
-    while(b < 3;){
+    while(b < 3){
         print("b: ");
-        print(b);
-        print("\n");
+        println(b);
         b = b + 1;
     }
 

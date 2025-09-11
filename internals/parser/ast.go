@@ -132,11 +132,11 @@ func (b BoolExpr) String() string {
 
 type SubscriptExpr struct {
 	Index *ExpressionStmt
-    Ident Identifier
+	Ident Identifier
 }
 
 func (s SubscriptExpr) String() string {
-    return fmt.Sprintf("SubScriptExpr: %s[%d]", s.Ident.Name, s.Index)
+	return fmt.Sprintf("SubScriptExpr: %s[%d]", s.Ident.Name, s.Index)
 }
 
 type VarUpdation struct {
@@ -159,7 +159,7 @@ func (f LoopStmt) String() string {
 	return fmt.Sprintf("LoopStmt")
 }
 
-type NullStmt struct {}
+type NullStmt struct{}
 
 func (f NullStmt) String() string {
 	return fmt.Sprintf("NullStmt")

@@ -17,7 +17,7 @@ type Lexer struct {
 
 func NewLexer(file *bufio.Reader) *Lexer {
 	l := &Lexer{
-		file: file,
+		file:    file,
 		line_no: 0,
 	}
 
@@ -50,7 +50,7 @@ func (l *Lexer) read_char() {
 	}
 
 	if l.ch == '\n' {
-		l.line_no++;
+		l.line_no++
 	}
 
 	l.pos = l.pos_next
